@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Chaveamento Oficial - Campeonato de Robótica</title>
     <link rel="icon" href="./styles/logo.png" type="image/png">
-    <!-- Supabase CDN + Cliente -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/auth.js"></script>
 
@@ -18,173 +17,116 @@
         h1 { margin: 0; font-size: 20px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
         p { color: #64748b; margin-top: 5px; font-weight: 500; font-size: 12px; }
 
-        /* Estrutura Responsiva */
-        .pyramid-outer-container {
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 20px;
-        }
-
-        .pyramid-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 5px;
-        }
-
-        .pyramid-level {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
+        .pyramid-outer-container { width: 100%; overflow-x: auto; padding-bottom: 20px; }
+        .pyramid-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; max-width: 1400px; margin: 0 auto; padding: 5px; }
+        .pyramid-level { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
         .level-title {
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #38bdf8;
-            background: #1e293b;
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid #334155;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            color: #38bdf8; background: #1e293b; padding: 6px 16px; border-radius: 20px;
+            border: 1px solid #334155; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .level-matches {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            width: 100%;
-        }
+        .level-matches { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
 
-        /* Card de Match */
         .match { 
-            background: #1e293b; 
-            border: 1px solid #334155; 
-            border-radius: 10px; 
-            padding: 10px; 
-            width: 100%;
-            max-width: 190px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); 
-            text-align: center;
-            transition: transform 0.2s;
+            background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 8px; 
+            width: 100%; max-width: 175px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); text-align: center;
         }
-
-        @media (max-width: 480px) {
-            .match { max-width: 100%; }
-        }
+        @media (max-width: 480px) { .match { max-width: 100%; } }
 
         .match-label { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         .team { 
-            background: #0f172a; 
-            padding: 8px; 
-            border-radius: 6px; 
-            font-size: 12px; 
-            font-weight: 600; 
-            color: #f1f5f9; 
-            border: 1px solid #1e293b; 
-            word-break: break-all; 
-            min-height: 36px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between;
-            transition: all 0.3s ease;
+            background: #0f172a; padding: 6px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; 
+            color: #f1f5f9; border: 1px solid #1e293b; word-break: break-all; min-height: 32px; 
+            display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease;
         }
         
-        .vs-divider { font-size: 9px; font-weight: bold; color: #475569; margin: 4px 0; }
+        .vs-divider { font-size: 9px; font-weight: bold; color: #475569; margin: 3px 0; }
 
-        /* Estilização para Vencedor e Perdedor */
         .team.winner {
-            background: #14532d !important;
-            border-color: #22c55e !important;
-            color: #f0fdf4 !important;
-            font-weight: 800;
-            box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+            background: #14532d !important; border-color: #22c55e !important; color: #f0fdf4 !important;
+            font-weight: 800; box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
         }
-        .team.winner::after {
-            content: "👑";
-            font-size: 12px;
-            margin-left: 5px;
-        }
+        .team.winner::after { content: "👑"; font-size: 12px; margin-left: 5px; }
 
         .team.loser {
-            opacity: 0.4;
-            background: #1e1e1e !important;
-            border-color: #450a0a !important;
-            color: #fca5a5 !important;
-            text-decoration: line-through;
+            opacity: 0.4; background: #1e1e1e !important; border-color: #450a0a !important; color: #fca5a5 !important; text-decoration: line-through;
         }
-        .team.loser::after {
-            content: "❌";
-            font-size: 10px;
-            margin-left: 5px;
-            text-decoration: none;
-        }
+        .team.loser::after { content: "❌"; font-size: 10px; margin-left: 5px; text-decoration: none; }
 
-        /* Estilizações de Categorias */
         .yellow-box { background: #422006; border-color: #ca8a04; }
         .yellow-box .match-label { color: #fde047; }
         .yellow-box .team { background: #713f12; color: #fef08a; border-color: #a16207; }
-
-        .blue-box { background: #172554; border-color: #2563eb; }
-        .blue-box .match-label { color: #93c5fd; }
-        .blue-box .team { background: #1e40af; color: #dbeafe; border-color: #1d4ed8; }
 
         .dark-box { background: #000000; border-color: #dc2626; }
         .dark-box .match-label { color: #fca5a5; }
         .dark-box .team { background: #450a0a; color: #fecaca; border-color: #991b1b; }
 
+        /* PÓDIO VISITANTE */
+        .podium-section { display: flex; gap: 12px; justify-content: center; align-items: flex-end; flex-wrap: wrap; width: 100%; }
+        
         .champ-card { 
-            background: linear-gradient(135deg, #ca8a04, #eab308); 
-            color: #000; 
-            padding: 14px; 
-            border-radius: 12px; 
-            text-align: center; 
-            width: 100%;
-            max-width: 260px;
-            box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); 
-            border: 2px solid #fef08a; 
+            background: linear-gradient(135deg, #ca8a04, #eab308); color: #000; padding: 14px; 
+            border-radius: 12px; text-align: center; width: 100%; max-width: 220px;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); border: 2px solid #fef08a; 
         }
         .champ-title { font-size: 11px; font-weight: 900; letter-spacing: 1px; color: #451a03; }
-        .champ-name { font-size: 16px; font-weight: 800; color: #000; margin-top: 4px; word-break: break-all; }
+        .champ-name { font-size: 15px; font-weight: 800; color: #000; margin-top: 4px; word-break: break-all; }
+
+        .silver-card { 
+            background: linear-gradient(135deg, #475569, #64748b); color: #fff; padding: 12px; 
+            border-radius: 12px; text-align: center; width: 100%; max-width: 200px;
+            box-shadow: 0 0 15px rgba(203, 213, 225, 0.25); border: 2px solid #cbd5e1; 
+        }
+        .silver-title { font-size: 11px; font-weight: 900; letter-spacing: 1px; color: #f1f5f9; }
+        .silver-name { font-size: 14px; font-weight: 800; color: #ffffff; margin-top: 4px; word-break: break-all; }
+
+        .bronze-card { 
+            background: linear-gradient(135deg, #78350f, #92400e); color: #fff; padding: 12px; 
+            border-radius: 12px; text-align: center; width: 100%; max-width: 200px;
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.2); border: 2px solid #f59e0b; 
+        }
+        .bronze-title { font-size: 11px; font-weight: 900; letter-spacing: 1px; color: #fef3c7; }
+        .bronze-name { font-size: 14px; font-weight: 800; color: #fef3c7; margin-top: 4px; word-break: break-all; }
     </style>
 </head>
 <body>
 
     <header>
-        <!-- Logo adicionada antes do título principal -->
         <img src="styles/logo.png" alt="Logo Robótica" class="logo">
-        <h1>Chaveamento Oficial</h1>
+        <h1>Chaveamento Oficial - 19 Escolas</h1>
         <p>Acompanhamento dos Confrontos em Tempo Real</p>
     </header>
 
     <div class="pyramid-outer-container">
         <div class="pyramid-container">
             
-            <!-- TOPO: CAMPEÃO -->
+            <!-- TOPO: PÓDIO COMPLETO -->
             <div class="pyramid-level">
-                <div class="champ-card">
-                    <div class="champ-title">🏆 CAMPEÃO 🏆</div>
-                    <div class="champ-name" id="champ">-</div>
+                <div class="podium-section">
+                    <div class="silver-card">
+                        <div class="silver-title">🥈 2º LUGAR</div>
+                        <div class="silver-name" id="second_place">-</div>
+                    </div>
+                    <div class="champ-card">
+                        <div class="champ-title">🏆 1º LUGAR (CAMPEÃO)</div>
+                        <div class="champ-name" id="champ">-</div>
+                    </div>
+                    <div class="bronze-card">
+                        <div class="bronze-title">🥉 3º LUGAR</div>
+                        <div class="bronze-name" id="third_place">-</div>
+                    </div>
                 </div>
             </div>
 
             <!-- 5º NÍVEL: GRANDE FINAL -->
             <div class="pyramid-level">
-                <div class="level-title">5º - Grande Final</div>
+                <div class="level-title">5º - Grande Final (Melhor de 3)</div>
                 <div class="level-matches">
                     <div class="match" data-match="w_r5_m1">
-                        <span class="match-label">Disputa Título</span>
+                        <span class="match-label">Disputa 1º/2º Lugar</span>
                         <div class="team" id="r5_m1_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r5_m1_t2">-</div>
@@ -194,16 +136,16 @@
 
             <!-- 4º NÍVEL: 4ª RODADA -->
             <div class="pyramid-level">
-                <div class="level-title">4º - 4ª Rodada</div>
+                <div class="level-title">4º - 4ª Rodada (Melhor de 3)</div>
                 <div class="level-matches">
-                    <div class="match dark-box" data-match="w_r4_m1">
-                        <span class="match-label">Melhor Perdedor</span>
+                    <div class="match" data-match="w_r4_m1">
+                        <span class="match-label">Jogo 1</span>
                         <div class="team" id="r4_m1_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r4_m1_t2">-</div>
                     </div>
-                    <div class="match blue-box" data-match="w_r4_m2">
-                        <span class="match-label">Sorteio Chapéu</span>
+                    <div class="match dark-box" data-match="w_r4_m2">
+                        <span class="match-label">Jogo 2 (Repescagem)</span>
                         <div class="team" id="r4_m2_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r4_m2_t2">-</div>
@@ -213,16 +155,20 @@
 
             <!-- 3º NÍVEL: 3ª RODADA -->
             <div class="pyramid-level">
-                <div class="level-title">3º - 3ª Rodada</div>
+                <div class="level-title">3º - 3ª Rodada (Novo Sorteio)</div>
                 <div class="level-matches">
                     <div class="match" data-match="w_r3_m1">
-                        <span class="match-label">Semifinal 01</span>
+                        <span class="match-label">Jogo A</span>
                         <div class="team" id="r3_m1_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r3_m1_t2">-</div>
                     </div>
-                    <div class="match yellow-box" data-match="w_r3_m2">
-                        <span class="match-label">Novo Sorteio</span>
+                    <div class="match yellow-box">
+                        <span class="match-label">Chapéu (3ª Rodada)</span>
+                        <div class="team" id="r3_m3_t1">-</div>
+                    </div>
+                    <div class="match" data-match="w_r3_m2">
+                        <span class="match-label">Jogo B</span>
                         <div class="team" id="r3_m2_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r3_m2_t2">-</div>
@@ -258,10 +204,16 @@
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r2_m4_t2">-</div>
                     </div>
+                    <div class="match yellow-box" data-match="w_r2_m5">
+                        <span class="match-label">Jogo 05</span>
+                        <div class="team" id="r2_m5_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r2_m5_t2">-</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- 1º NÍVEL: 1ª RODADA (BASE DA PIRÂMIDE) -->
+            <!-- 1º NÍVEL: 1ª RODADA -->
             <div class="pyramid-level">
                 <div class="level-title">1º - 1ª Rodada (Mata-Mata)</div>
                 <div class="level-matches">
@@ -307,11 +259,21 @@
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m7_t2">-</div>
                     </div>
-                    <div class="match yellow-box" data-match="w_r1_m8">
-                        <span class="match-label">Sorteio 1º</span>
+                    <div class="match" data-match="w_r1_m8">
+                        <span class="match-label">Conf 08</span>
                         <div class="team" id="r1_m8_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m8_t2">-</div>
+                    </div>
+                    <div class="match" data-match="w_r1_m9">
+                        <span class="match-label">Conf 09</span>
+                        <div class="team" id="r1_m9_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r1_m9_t2">-</div>
+                    </div>
+                    <div class="match yellow-box">
+                        <span class="match-label">Chapéu 1ª Rodada</span>
+                        <div class="team" id="r1_m10_t1">-</div>
                     </div>
                 </div>
             </div>
@@ -353,7 +315,7 @@
         }
 
         async function fetchVisitorData() {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('tournament_data')
                 .select('data')
                 .eq('id', 1)

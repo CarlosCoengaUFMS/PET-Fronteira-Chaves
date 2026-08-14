@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Admin - Chaveamento de Robótica</title>
+    <title>Admin - Chaveamento de Robótica (19 Escolas)</title>
 
-    <!-- Logo no Head -->
     <link rel="icon" href="./styles/logo.png" type="image/png">
-
-    <!-- Supabase CDN + Cliente -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/auth.js"></script>
 
@@ -17,51 +14,23 @@
         body { background-color: #0f172a; margin: 0; padding: 15px; color: #f8fafc; min-height: 100vh; }
         
         header { 
-            display: flex; 
-            flex-wrap: wrap;
-            justify-content: space-between; 
-            align-items: center; 
-            background: #1e293b; 
-            padding: 15px 20px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
-            margin-bottom: 20px; 
-            border: 1px solid #334155; 
-            gap: 15px;
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; 
+            background: #1e293b; padding: 15px 20px; border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); margin-bottom: 20px; border: 1px solid #334155; gap: 15px;
         }
         
-        .header-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .header-logo {
-            height: 38px;
-            width: auto;
-            object-fit: contain;
-        }
-
+        .header-brand { display: flex; align-items: center; gap: 12px; }
+        .header-logo { height: 38px; width: auto; object-fit: contain; }
         h1 { margin: 0; font-size: 20px; color: #38bdf8; display: flex; align-items: center; gap: 8px; }
         
         .header-actions { display: flex; gap: 10px; flex-wrap: wrap; width: 100%; justify-content: flex-end; }
         @media (min-width: 600px) { .header-actions { width: auto; } }
 
         .btn { 
-            background-color: #2563eb; 
-            color: white; 
-            border: none; 
-            padding: 10px 16px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            text-decoration: none; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-            gap: 6px; 
-            font-size: 13px;
-            flex: 1;
+            background-color: #2563eb; color: white; border: none; padding: 10px 16px; 
+            border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; 
+            text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+            gap: 6px; font-size: 13px; flex: 1;
         }
         @media (min-width: 600px) { .btn { flex: initial; } }
         .btn:hover { background-color: #1d4ed8; }
@@ -72,98 +41,34 @@
         .btn-danger { background-color: #dc2626; }
         .btn-danger:hover { background-color: #b91c1c; }
 
-        /* Estrutura da Pirâmide Responsiva */
-        .pyramid-outer-container {
-            width: 100%;
-            overflow-x: auto;
-            padding-bottom: 20px;
-        }
-
-        .pyramid-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 5px;
-        }
-
-        .pyramid-level {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
+        .pyramid-outer-container { width: 100%; overflow-x: auto; padding-bottom: 20px; }
+        .pyramid-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; max-width: 1400px; margin: 0 auto; padding: 5px; }
+        .pyramid-level { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
         .level-title {
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #38bdf8;
-            background: #1e293b;
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid #334155;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            color: #38bdf8; background: #1e293b; padding: 6px 16px; border-radius: 20px;
+            border: 1px solid #334155; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .level-matches {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            width: 100%;
-        }
+        .level-matches { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
 
         .match { 
-            background: #1e293b; 
-            border: 1px solid #334155; 
-            border-radius: 10px; 
-            padding: 10px; 
-            width: 100%;
-            max-width: 200px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); 
-            text-align: center;
+            background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 8px; 
+            width: 100%; max-width: 180px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); text-align: center;
         }
-
-        @media (max-width: 480px) {
-            .match { max-width: 100%; }
-        }
+        @media (max-width: 480px) { .match { max-width: 100%; } }
 
         .match-label { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .vs-divider { font-size: 9px; font-weight: bold; color: #64748b; margin: 4px 0; }
+        .vs-divider { font-size: 9px; font-weight: bold; color: #64748b; margin: 3px 0; }
 
-        .team-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 2px;
-        }
-
+        .team-row { display: flex; align-items: center; gap: 4px; margin-bottom: 2px; }
         .team-row input[type="text"] { flex: 1; }
-        .team-row input[type="radio"] { 
-            cursor: pointer; 
-            accent-color: #22c55e; 
-            width: 18px; 
-            height: 18px;
-        }
+        .team-row input[type="radio"] { cursor: pointer; accent-color: #22c55e; width: 16px; height: 16px; }
 
         input[type="text"] { 
-            width: 100%; 
-            padding: 8px; 
-            background: #0f172a;
-            color: #f8fafc;
-            border: 1px solid #334155; 
-            border-radius: 6px; 
-            font-size: 13px; 
-            outline: none; 
-            text-align: center;
-            transition: 0.2s; 
+            width: 100%; padding: 6px; background: #0f172a; color: #f8fafc; border: 1px solid #334155; 
+            border-radius: 6px; font-size: 12px; outline: none; text-align: center; transition: 0.2s; 
         }
         input[type="text"]:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
 
@@ -171,24 +76,33 @@
         .yellow-box .match-label { color: #fde047; }
         .yellow-box input[type="text"] { background: #713f12; color: #fef08a; border-color: #a16207; }
 
-        .blue-box { background: #172554; border-color: #2563eb; }
-        .blue-box .match-label { color: #93c5fd; }
-        .blue-box input[type="text"] { background: #1e40af; color: #dbeafe; border-color: #1d4ed8; }
-
         .dark-box { background: #000000; border-color: #dc2626; }
         .dark-box .match-label { color: #fca5a5; }
         .dark-box input[type="text"] { background: #450a0a; color: #fecaca; border-color: #991b1b; }
 
+        /* PÓDIO ESTILIZADO */
+        .podium-section { display: flex; gap: 12px; justify-content: center; align-items: flex-end; flex-wrap: wrap; width: 100%; }
+        
         .champ-card { 
-            background: linear-gradient(135deg, #ca8a04, #eab308); 
-            border: 2px solid #fef08a; 
-            padding: 12px;
-            width: 100%;
-            max-width: 260px;
-            box-shadow: 0 0 20px rgba(234, 179, 8, 0.3);
+            background: linear-gradient(135deg, #ca8a04, #eab308); border: 2px solid #fef08a; padding: 14px;
+            width: 100%; max-width: 220px; box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); text-align: center; border-radius: 12px;
         }
         .champ-card .match-label { color: #451a03; font-weight: 900; font-size: 12px; }
-        .champ-card input[type="text"] { font-weight: bold; font-size: 14px; background: #fef08a; color: #000; border-color: #ca8a04; }
+        .champ-card input[type="text"] { font-weight: bold; font-size: 13px; background: #fef08a; color: #000; border-color: #ca8a04; }
+
+        .silver-card { 
+            background: linear-gradient(135deg, #475569, #64748b); border: 2px solid #cbd5e1; padding: 12px;
+            width: 100%; max-width: 200px; box-shadow: 0 0 15px rgba(203, 213, 225, 0.25); text-align: center; border-radius: 10px;
+        }
+        .silver-card .match-label { color: #f1f5f9; font-weight: 900; font-size: 11px; }
+        .silver-card input[type="text"] { font-weight: bold; font-size: 12px; background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
+
+        .bronze-card { 
+            background: linear-gradient(135deg, #78350f, #92400e); border: 2px solid #f59e0b; padding: 12px;
+            width: 100%; max-width: 200px; box-shadow: 0 0 15px rgba(217, 119, 6, 0.2); text-align: center; border-radius: 10px;
+        }
+        .bronze-card .match-label { color: #fef3c7; font-weight: 900; font-size: 11px; }
+        .bronze-card input[type="text"] { font-weight: bold; font-size: 12px; background: #451a03; color: #fef3c7; border-color: #b45309; }
     </style>
 </head>
 <body>
@@ -196,7 +110,7 @@
     <header>
         <div class="header-brand">
             <img src="./styles/logo.png" alt="Logo" class="header-logo">
-            <h1>⚙️ Admin - Robótica</h1>
+            <h1>⚙️ Admin - Chaveamento (19 Escolas)</h1>
         </div>
         <div class="header-actions">
             <button class="btn btn-success" type="button" onclick="saveData()">💾 Salvar</button>
@@ -210,28 +124,38 @@
         <div class="pyramid-outer-container">
             <div class="pyramid-container">
                 
-                <!-- TOPO: CAMPEÃO -->
+                <!-- TOPO: PÓDIO COMPLETO -->
                 <div class="pyramid-level">
-                    <div class="match champ-card">
-                        <span class="match-label">🏆 CAMPEÃO 🏆</span>
-                        <input type="text" id="champ" placeholder="Nome do Campeão">
+                    <div class="podium-section">
+                        <div class="silver-card">
+                            <span class="match-label">🥈 2º LUGAR</span>
+                            <input type="text" id="second_place" placeholder="2º Colocado">
+                        </div>
+                        <div class="champ-card">
+                            <span class="match-label">🏆 1º LUGAR (CAMPEÃO)</span>
+                            <input type="text" id="champ" placeholder="Nome do Campeão">
+                        </div>
+                        <div class="bronze-card">
+                            <span class="match-label">🥉 3º LUGAR</span>
+                            <input type="text" id="third_place" placeholder="3º Colocado">
+                        </div>
                     </div>
                 </div>
 
                 <!-- 5º NÍVEL: GRANDE FINAL -->
                 <div class="pyramid-level">
-                    <div class="level-title">5º - Grande Final</div>
+                    <div class="level-title">5º - Grande Final (Melhor de 3)</div>
                     <div class="level-matches">
                         <div class="match">
-                            <span class="match-label">Disputa Título</span>
+                            <span class="match-label">Disputa 1º/2º Lugar</span>
                             <div class="team-row">
                                 <input type="radio" name="w_r5_m1" value="t1">
-                                <input type="text" id="r5_m1_t1" placeholder="Finalista 01">
+                                <input type="text" id="r5_m1_t1" placeholder="Vencedor Jogo 1 (R4)">
                             </div>
                             <div class="vs-divider">VS</div>
                             <div class="team-row">
                                 <input type="radio" name="w_r5_m1" value="t2">
-                                <input type="text" id="r5_m1_t2" placeholder="Finalista 02">
+                                <input type="text" id="r5_m1_t2" placeholder="Vencedor Jogo 2 (R4)">
                             </div>
                         </div>
                     </div>
@@ -239,30 +163,30 @@
 
                 <!-- 4º NÍVEL: 4ª RODADA -->
                 <div class="pyramid-level">
-                    <div class="level-title">4º - 4ª Rodada</div>
+                    <div class="level-title">4º - 4ª Rodada (Melhor de 3)</div>
                     <div class="level-matches">
-                        <div class="match dark-box">
-                            <span class="match-label">Melhor Perdedor</span>
+                        <div class="match">
+                            <span class="match-label">Jogo 1</span>
                             <div class="team-row">
                                 <input type="radio" name="w_r4_m1" value="t1">
-                                <input type="text" id="r4_m1_t1" placeholder="Melhor Perdedor">
+                                <input type="text" id="r4_m1_t1" placeholder="Vencedor Jogo A (R3)">
                             </div>
                             <div class="vs-divider">VS</div>
                             <div class="team-row">
                                 <input type="radio" name="w_r4_m1" value="t2">
-                                <input type="text" id="r4_m1_t2" placeholder="Vencedor Semi 1">
+                                <input type="text" id="r4_m1_t2" placeholder="Vencedor Jogo B (R3)">
                             </div>
                         </div>
-                        <div class="match blue-box">
-                            <span class="match-label">Sorteio Chapéu</span>
+                        <div class="match dark-box">
+                            <span class="match-label">Jogo 2 (Repescagem)</span>
                             <div class="team-row">
                                 <input type="radio" name="w_r4_m2" value="t1">
-                                <input type="text" id="r4_m2_t1" placeholder="Vencedor Semi 2">
+                                <input type="text" id="r4_m2_t1" placeholder="Sorteado Chapéu (R3)">
                             </div>
                             <div class="vs-divider">VS</div>
                             <div class="team-row">
                                 <input type="radio" name="w_r4_m2" value="t2">
-                                <input type="text" id="r4_m2_t2" value="Sorteio Chapéu">
+                                <input type="text" id="r4_m2_t2" placeholder="Melhor Perdedor (R3)">
                             </div>
                         </div>
                     </div>
@@ -270,30 +194,36 @@
 
                 <!-- 3º NÍVEL: 3ª RODADA -->
                 <div class="pyramid-level">
-                    <div class="level-title">3º - 3ª Rodada</div>
+                    <div class="level-title">3º - 3ª Rodada (Novo Sorteio)</div>
                     <div class="level-matches">
                         <div class="match">
-                            <span class="match-label">Semifinal 01</span>
+                            <span class="match-label">Jogo A</span>
                             <div class="team-row">
                                 <input type="radio" name="w_r3_m1" value="t1">
-                                <input type="text" id="r3_m1_t1" placeholder="Classif. Jogo 1">
+                                <input type="text" id="r3_m1_t1" placeholder="Escola Sorteada 1">
                             </div>
                             <div class="vs-divider">VS</div>
                             <div class="team-row">
                                 <input type="radio" name="w_r3_m1" value="t2">
-                                <input type="text" id="r3_m1_t2" placeholder="Classif. Jogo 2">
+                                <input type="text" id="r3_m1_t2" placeholder="Escola Sorteada 2">
                             </div>
                         </div>
                         <div class="match yellow-box">
-                            <span class="match-label">Novo Sorteio</span>
+                            <span class="match-label">Chapéu (3ª Rodada)</span>
+                            <div class="team-row">
+                                <input type="text" id="r3_m3_t1" placeholder="Sorteado (Não repete 1º Chapéu)">
+                            </div>
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Jogo B</span>
                             <div class="team-row">
                                 <input type="radio" name="w_r3_m2" value="t1">
-                                <input type="text" id="r3_m2_t1" placeholder="Classif. Jogo 3">
+                                <input type="text" id="r3_m2_t1" placeholder="Escola Sorteada 3">
                             </div>
                             <div class="vs-divider">VS</div>
                             <div class="team-row">
                                 <input type="radio" name="w_r3_m2" value="t2">
-                                <input type="text" id="r3_m2_t2" value="Sorteado Amarelo">
+                                <input type="text" id="r3_m2_t2" placeholder="Escola Sorteada 4">
                             </div>
                         </div>
                     </div>
@@ -301,157 +231,103 @@
 
                 <!-- 2º NÍVEL: 2ª RODADA -->
                 <div class="pyramid-level">
-                    <div class="level-title">2º - 2ª Rodada</div>
+                    <div class="level-title">2º - 2ª Rodada (Confrontos Diretos)</div>
                     <div class="level-matches">
                         <div class="match">
                             <span class="match-label">Jogo 01</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r2_m1" value="t1">
-                                <input type="text" id="r2_m1_t1" placeholder="Venc. Conf 1">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r2_m1" value="t1"><input type="text" id="r2_m1_t1" placeholder="Venc Conf 01"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r2_m1" value="t2">
-                                <input type="text" id="r2_m1_t2" placeholder="Venc. Conf 2">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r2_m1" value="t2"><input type="text" id="r2_m1_t2" placeholder="Venc Conf 02"></div>
                         </div>
                         <div class="match">
                             <span class="match-label">Jogo 02</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r2_m2" value="t1">
-                                <input type="text" id="r2_m2_t1" placeholder="Venc. Conf 3">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r2_m2" value="t1"><input type="text" id="r2_m2_t1" placeholder="Venc Conf 03"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r2_m2" value="t2">
-                                <input type="text" id="r2_m2_t2" placeholder="Venc. Conf 4">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r2_m2" value="t2"><input type="text" id="r2_m2_t2" placeholder="Venc Conf 04"></div>
                         </div>
                         <div class="match">
                             <span class="match-label">Jogo 03</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r2_m3" value="t1">
-                                <input type="text" id="r2_m3_t1" placeholder="Venc. Conf 5">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r2_m3" value="t1"><input type="text" id="r2_m3_t1" placeholder="Venc Conf 05"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r2_m3" value="t2">
-                                <input type="text" id="r2_m3_t2" placeholder="Venc. Conf 6">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r2_m3" value="t2"><input type="text" id="r2_m3_t2" placeholder="Venc Conf 06"></div>
                         </div>
                         <div class="match">
                             <span class="match-label">Jogo 04</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r2_m4" value="t1">
-                                <input type="text" id="r2_m4_t1" placeholder="Venc. Conf 7">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r2_m4" value="t1"><input type="text" id="r2_m4_t1" placeholder="Venc Conf 07"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r2_m4" value="t2">
-                                <input type="text" id="r2_m4_t2" placeholder="Venc. Repescagem">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r2_m4" value="t2"><input type="text" id="r2_m4_t2" placeholder="Venc Conf 08"></div>
+                        </div>
+                        <div class="match yellow-box">
+                            <span class="match-label">Jogo 05</span>
+                            <div class="team-row"><input type="radio" name="w_r2_m5" value="t1"><input type="text" id="r2_m5_t1" placeholder="Venc Conf 09"></div>
+                            <div class="vs-divider">VS</div>
+                            <div class="team-row"><input type="radio" name="w_r2_m5" value="t2"><input type="text" id="r2_m5_t2" placeholder="Escola 19 (Chapéu R1)"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 1º NÍVEL: 1ª RODADA (BASE DA PIRÂMIDE) -->
+                <!-- 1º NÍVEL: 1ª RODADA -->
                 <div class="pyramid-level">
-                    <div class="level-title">1º - 1ª Rodada (Mata-Mata)</div>
+                    <div class="level-title">1º - 1ª Rodada (Mata-Mata - Sorteio)</div>
                     <div class="level-matches">
                         <div class="match">
                             <span class="match-label">Conf 01</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m1" value="t1">
-                                <input type="text" id="r1_m1_t1" value="Escola A1">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m1" value="t1"><input type="text" id="r1_m1_t1" value="Escola 01"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m1" value="t2">
-                                <input type="text" id="r1_m1_t2" value="Escola A2">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m1" value="t2"><input type="text" id="r1_m1_t2" value="Escola 02"></div>
                         </div>
                         <div class="match">
                             <span class="match-label">Conf 02</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m2" value="t1">
-                                <input type="text" id="r1_m2_t1" value="Escola B1">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m2" value="t1"><input type="text" id="r1_m2_t1" value="Escola 03"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m2" value="t2">
-                                <input type="text" id="r1_m2_t2" value="Escola B2">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m2" value="t2"><input type="text" id="r1_m2_t2" value="Escola 04"></div>
                         </div>
                         <div class="match">
                             <span class="match-label">Conf 03</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m3" value="t1">
-                                <input type="text" id="r1_m3_t1" value="Escola C1">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m3" value="t1"><input type="text" id="r1_m3_t1" value="Escola 05"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m3" value="t2">
-                                <input type="text" id="r1_m3_t2" value="Escola C2">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m3" value="t2"><input type="text" id="r1_m3_t2" value="Escola 06"></div>
                         </div>
                         <div class="match">
                             <span class="match-label">Conf 04</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m4" value="t1">
-                                <input type="text" id="r1_m4_t1" value="Escola D1">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m4" value="t1"><input type="text" id="r1_m4_t1" value="Escola 07"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m4" value="t2">
-                                <input type="text" id="r1_m4_t2" value="Escola D2">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m4" value="t2"><input type="text" id="r1_m4_t2" value="Escola 08"></div>
                         </div>
                         <div class="match">
                             <span class="match-label">Conf 05</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m5" value="t1">
-                                <input type="text" id="r1_m5_t1" value="Escola E1">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m5" value="t1"><input type="text" id="r1_m5_t1" value="Escola 09"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m5" value="t2">
-                                <input type="text" id="r1_m5_t2" value="Escola E2">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m5" value="t2"><input type="text" id="r1_m5_t2" value="Escola 10"></div>
                         </div>
                         <div class="match">
                             <span class="match-label">Conf 06</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m6" value="t1">
-                                <input type="text" id="r1_m6_t1" value="Escola F1">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m6" value="t1"><input type="text" id="r1_m6_t1" value="Escola 11"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m6" value="t2">
-                                <input type="text" id="r1_m6_t2" value="Escola F2">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m6" value="t2"><input type="text" id="r1_m6_t2" value="Escola 12"></div>
                         </div>
                         <div class="match">
                             <span class="match-label">Conf 07</span>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m7" value="t1">
-                                <input type="text" id="r1_m7_t1" value="Escola G1">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m7" value="t1"><input type="text" id="r1_m7_t1" value="Escola 13"></div>
                             <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m7" value="t2">
-                                <input type="text" id="r1_m7_t2" value="Escola G2">
-                            </div>
+                            <div class="team-row"><input type="radio" name="w_r1_m7" value="t2"><input type="text" id="r1_m7_t2" value="Escola 14"></div>
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Conf 08</span>
+                            <div class="team-row"><input type="radio" name="w_r1_m8" value="t1"><input type="text" id="r1_m8_t1" value="Escola 15"></div>
+                            <div class="vs-divider">VS</div>
+                            <div class="team-row"><input type="radio" name="w_r1_m8" value="t2"><input type="text" id="r1_m8_t2" value="Escola 16"></div>
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Conf 09</span>
+                            <div class="team-row"><input type="radio" name="w_r1_m9" value="t1"><input type="text" id="r1_m9_t1" value="Escola 17"></div>
+                            <div class="vs-divider">VS</div>
+                            <div class="team-row"><input type="radio" name="w_r1_m9" value="t2"><input type="text" id="r1_m9_t2" value="Escola 18"></div>
                         </div>
                         <div class="match yellow-box">
-                            <span class="match-label">Sorteio 1º</span>
+                            <span class="match-label">Chapéu 1ª Rodada</span>
                             <div class="team-row">
-                                <input type="radio" name="w_r1_m8" value="t1">
-                                <input type="text" id="r1_m8_t1" value="Amarelo 01">
-                            </div>
-                            <div class="vs-divider">VS</div>
-                            <div class="team-row">
-                                <input type="radio" name="w_r1_m8" value="t2">
-                                <input type="text" id="r1_m8_t2" value="Amarelo 02">
+                                <input type="text" id="r1_m10_t1" value="Escola 19 (Isenta R1)">
                             </div>
                         </div>
                     </div>
@@ -462,7 +338,6 @@
     </form>
 
     <script>
-        // Permite desmarcar um radio button clicando nele novamente
         function enableRadioToggle() {
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
                 radio.addEventListener('click', function() {
@@ -526,7 +401,7 @@
         }
 
         async function loadData() {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('tournament_data')
                 .select('data')
                 .eq('id', 1)
