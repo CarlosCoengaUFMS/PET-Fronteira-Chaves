@@ -10,14 +10,14 @@
 
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        body { background-color: #0b1120; margin: 0; padding: 15px; color: #f8fafc; min-height: 100vh; }
+        body { background-color: #0b1120; margin: 0; padding: 15px; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
         
         header { text-align: center; margin-bottom: 20px; }
         .logo { width: 80px; max-width: 100%; height: auto; margin: 0 auto 10px; display: block; }
         h1 { margin: 0; font-size: 20px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
         p { color: #64748b; margin-top: 5px; font-weight: 500; font-size: 12px; }
 
-        .pyramid-outer-container { width: 100%; overflow-x: auto; padding-bottom: 20px; }
+        .pyramid-outer-container { width: 100%; overflow-x: auto; padding-bottom: 20px; flex: 1; }
         .pyramid-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; max-width: 1400px; margin: 0 auto; padding: 5px; }
         .pyramid-level { display: flex; flex-direction: column; align-items: center; width: 100%; }
 
@@ -90,6 +90,42 @@
         }
         .bronze-title { font-size: 11px; font-weight: 900; letter-spacing: 1px; color: #fef3c7; }
         .bronze-name { font-size: 14px; font-weight: 800; color: #fef3c7; margin-top: 4px; word-break: break-all; }
+
+        /* ESTILOS DO RODAPÉ */
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #1e293b;
+            text-align: center;
+        }
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .footer-icon {
+            width: 32px;
+            height: auto;
+            border-radius: 4px;
+        }
+        .footer-text {
+            color: #64748b;
+            font-size: 13px;
+            margin: 0;
+            font-weight: 500;
+        }
+        .footer-text a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+        .footer-text a:hover {
+            color: #7dd3fc;
+            text-decoration: underline;
+            text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -280,6 +316,24 @@
 
         </div>
     </div>
+
+    <!-- RODAPÉ COM ÍCONE DO GITHUB -->
+<footer>
+    <div class="footer-content">
+        <img src="styles/icon.png" alt="Ícone PET Fronteira" class="footer-icon">
+        <p class="footer-text">
+            <strong>Solicitante:</strong> <a href="https://petfronteira.duckdns.org/" target="_blank" rel="noopener noreferrer">PET Fronteira</a>
+        </p>
+        <span style="color: #334155; font-size: 18px;">|</span>
+        <p class="footer-text">
+            <strong>Criador:</strong> 
+            <a href="https://github.com/CarlosCoengaUFMS" target="_blank" rel="noopener noreferrer">
+                <img src="https://github.com/favicon.ico" alt="GitHub" style="width: 16px; height: 16px; vertical-align: middle; border-radius: 50%;">
+                CarlosCoengaUFMS
+            </a>
+        </p>
+    </div>
+</footer>
 
     <script>
         function renderBracket(bracketData) {
