@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Roleta de Sorteio - Campeonato de Robótica</title>
+    
+    <link rel="icon" href="./styles/logo.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Mantenha seus scripts externos de auth aqui -->
+    <script src="js/auth.js" defer></script>
+
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --panel-bg: #1e293b;
+            --text-main: #f8fafc;
+            --accent-blue: #38bdf8;
+            --accent-gold: #eab308;
+            --border-color: #334155;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color); margin: 0; padding: 15px; 
+            color: var(--text-main); min-height: 100vh; overflow-x: hidden;
+        }
+        
+        /* Personalização do Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        header { 
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; 
+            background: var(--panel-bg); padding: 15px 20px; border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); margin-bottom: 20px; border: 1px solid var(--border-color); gap: 15px;
+        }
+        
+        .header-brand { display: flex; align-items: center; gap: 12px; }
+        .header-logo { height: 38px; width: auto; object-fit: contain; }
+        h1 { margin: 0; font-size: 20px; color: var(--accent-blue); display: flex; align-items: center; gap: 8px; }
+        
+        .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { 
+            background-color: #2563eb; color: white; border: none; padding: 10px 16px; 
+            border-radius: 8px; font-weight: bold; cursor: pointer; transition: all 0.2s; 
+            text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+            gap: 6px; font-size: 13px;
+        }
+        .btn:hover { background-color: #1d4ed8; transform: translateY(-1px); }
+        .btn-success { background-color: #16a34a; }
+        .btn-success:hover { background-color: #15803d; }
+        .btn-warning { background-color: #d97706; }
+        .btn-warning:hover { background-color: #b45309; }
+
+        .main-container { 
+            display: grid; grid-template-columns: 1fr; gap: 20px; max-width: 1300px; margin: 0 auto; 
+        }
+        @media (min-width: 900px) {
+            .main-container { grid-template-columns: 340px 1fr; }
+        }
+
+        .panel { 
+            background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 12px; 
+            padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .panel-title { font-size: 14px; font-weight: 800; color: var(--accent-blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+
+        textarea {
+            width: 100%; height: 180px; background: #0f172a; color: var(--text-main); 
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; 
+            font-size: 13px; outline: none; resize: vertical; line-height: 1.5;
+            transition: border-color 0.2s;
+        }
+        textarea:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+
+        .presets { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn-preset { 
+            background: #334155; color: #cbd5e1; border: none; padding: 6px 12px; 
+            border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .btn-preset:hover { background: #475569; color: #fff; }
+
+        .checkbox-label {
+            font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 8px; 
+            margin-top: 5px; color: #cbd5e1; user-select: none;
+        }
+
+        /* ÁREA DA ROLETA */
+        .wheel-section { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .wheel-wrapper { position: relative; width: 100%; max-width: 500px; aspect-ratio: 1; margin: 0 auto; }
+
+        .pointer {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            width: 0; height: 0; 
+            border-left: 20px solid transparent; border-right: 20px solid transparent; 
+            border-top: 35px solid #ef4444; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+            z-index: 10;
+        }
+
+        canvas { 
+            width: 100%; height: 100%; border-radius: 50%; 
+            box-shadow: 0 0 40px rgba(0,0,0,0.6), 0 0 15px rgba(56, 189, 248, 0.2); 
+            display: block;
+        }
+
+        .spin-btn-container { margin-top: 30px; text-align: center; width: 100%; }
+        .spin-btn {
+            background: linear-gradient(135deg, var(--accent-gold), #ca8a04); color: #000; border: none;
+            padding: 16px 50px; font-size: 22px; font-weight: 900; letter-spacing: 1.5px;
+            text-transform: uppercase; border-radius: 50px; cursor: pointer;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .spin-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 30px rgba(234, 179, 8, 0.6); }
+        .spin-btn:active:not(:disabled) { transform: scale(0.98); }
+        .spin-btn:disabled { 
+            background: #334155; color: #94a3b8; box-shadow: none; cursor: not-allowed; opacity: 0.7;
+        }
+
+        /* ANÚNCIO DO VENCEDOR */
+        .winner-modal {
+            position: fixed; inset: 0; background: rgba(11, 17, 32, 0.9); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center; z-index: 100;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+        }
+        .winner-modal.active { opacity: 1; pointer-events: auto; }
+
+        .winner-card {
+            background: var(--panel-bg); border: 2px solid var(--accent-gold); padding: 40px; border-radius: 24px;
+            text-align: center; max-width: 90%; width: 450px; box-shadow: 0 0 60px rgba(234, 179, 8, 0.2);
+            transform: translateY(20px) scale(0.9); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .winner-modal.active .winner-card { transform: translateY(0) scale(1); }
+
+        .winner-subtitle { font-size: 16px; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 3px; }
+        .winner-name { font-size: 32px; font-weight: 900; color: #ffffff; margin: 20px 0 30px; word-break: break-word; line-height: 1.2; }
+
+        .history-list { 
+            font-size: 13px; max-height: 150px; overflow-y: auto; background: #0f172a; 
+            padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); 
+        }
+        .history-item { 
+            padding: 6px 8px; border-bottom: 1px solid var(--panel-bg); 
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .history-item:last-child { border-bottom: none; }
+        .history-time { color: #64748b; font-size: 11px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <!-- Caso a imagem quebre, adicionei um emoji de fallback -->
+            <img src="./styles/logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+            <h1>🎰 Sorteador Oficial</h1>
+        </div>
+        <div class="header-actions">
+            <a href="admin.html" class="btn">⚙️ Painel Admin</a>
+            <a href="visitor.html" class="btn btn-warning" target="_blank">👁️ Chaveamento</a>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- PAINEL DE CONTROLE / LISTA -->
+        <div class="panel">
+            <div class="panel-title">📋 Participantes</div>
+            
+            <div class="presets">
+                <button class="btn-preset" type="button" onclick="load19Schools()">19 Escolas (R1)</button>
+                <button class="btn-preset" type="button" onclick="clearList()">Limpar Lista</button>
+            </div>
+
+            <textarea id="teamsInput" placeholder="Digite um nome por linha..." oninput="debounceUpdate()"></textarea>
+            
+            <button class="btn btn-success" type="button" id="btnUpdate" onclick="updateWheel()">🔄 Atualizar Roleta</button>
+            
+            <label class="checkbox-label">
+                <input type="checkbox" id="autoRemove" checked>
+                Remover sorteado automaticamente
+            </label>
+
+            <hr style="border-color: var(--border-color); margin: 15px 0; width: 100%;">
+
+            <div class="panel-title" style="display:flex; justify-content: space-between; align-items: center;">
+                📜 Histórico
+                <button class="btn-preset" style="font-size: 10px; padding: 4px 8px;" onclick="clearHistory()">Limpar</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <span id="emptyHistory" style="color: #64748b; display: block; text-align: center; margin-top: 10px;">Nenhum sorteio realizado.</span>
+            </div>
+        </div>
+
+        <!-- ÁREA DA ROLETA -->
+        <div class="panel wheel-section">
+            <div class="wheel-wrapper">
+                <div class="pointer"></div>
+                <canvas id="wheelCanvas"></canvas>
+            </div>
+
+            <div class="spin-btn-container">
+                <button class="spin-btn" id="spinBtn" onclick="spinWheel()">GIRAR ROLETA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DO VENCEDOR -->
+    <div class="winner-modal" id="winnerModal">
+        <div class="winner-card">
+            <div class="winner-subtitle">🎉 SORTEADO! 🎉</div>
+            <div class="winner-name" id="winnerName">Escola XX</div>
+            <button class="btn btn-warning" style="width: 100%; padding: 14px; font-size: 16px; font-weight: bold;" onclick="closeModal()">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURAÇÕES GERAIS
+        const BASE_SIZE = 500;
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const spinBtn = document.getElementById('spinBtn');
+        const teamsInput = document.getElementById('teamsInput');
+        const winnerModal = document.getElementById('winnerModal');
+        const winnerNameText = document.getElementById('winnerName');
+        const historyList = document.getElementById('historyList');
+        const emptyHistoryText = document.getElementById('emptyHistory');
+
+        let teams = [];
+        let startAngle = 0;
+        let arc = 0;
+        let spinTimeout = null;
+        let isSpinning = false;
+        let lastSegmentIndex = -1;
+        
+        // Variáveis de Animação
+        let spinAngleStart = 10;
+        let spinTime = 0;
+        let spinTimeTotal = 0;
+
+        // CORES ESTILIZADAS (Paleta expandida e vibrante)
+        const sliceColors = [
+            '#2563eb', '#d97706', '#16a34a', '#dc2626', '#9333ea', 
+            '#0284c7', '#ca8a04', '#059669', '#e11d48', '#7c3aed',
+            '#ea580c', '#4f46e5'
+        ];
+
+        // OTIMIZAÇÃO: Suporte para telas Retina (High-DPI)
+        function initCanvasScale() {
+            const scale = window.devicePixelRatio || 1;
+            canvas.width = BASE_SIZE * scale;
+            canvas.height = BASE_SIZE * scale;
+            ctx.scale(scale, scale);
+        }
+
+        // SISTEMA DE ÁUDIO MELHORADO
+        let audioCtx;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playTickSound() {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.03);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.03);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.03);
+            } catch (e) {}
+        }
+
+        // FUNÇÕES DE MANIPULAÇÃO DA LISTA
+        function load19Schools() {
+            let defaultList = Array.from({length: 19}, (_, i) => `Escola ${(i+1).toString().padStart(2, '0')}`);
+            teamsInput.value = defaultList.join('\n');
+            updateWheel();
+        }
+
+        function clearList() {
+            teamsInput.value = '';
+            updateWheel();
+        }
+
+        let debounceTimer;
+        function debounceUpdate() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => { updateWheel(); }, 500);
+        }
+
+        // LÓGICA DA ROLETA
+        function updateWheel() {
+            const raw = teamsInput.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+            teams = raw;
+            
+            // Requer pelo menos 2 itens para fazer sentido girar
+            if (teams.length > 1) {
+                arc = (Math.PI * 2) / teams.length;
+                drawWheel();
+                spinBtn.disabled = false;
+                spinBtn.textContent = "GIRAR ROLETA";
+            } else if (teams.length === 1) {
+                arc = Math.PI * 2;
+                drawWheel();
+                spinBtn.disabled = true;
+                spinBtn.textContent = "ADICIONE MAIS ITENS";
+            } else {
+                ctx.clearRect(0, 0, BASE_SIZE, BASE_SIZE);
+                spinBtn.disabled = true;
+                spinBtn.textContent = "LISTA VAZIA";
+            }
+        }
+
+        function drawWheel() {
+            if (teams.length === 0) return;
+            
+            const center = BASE_SIZE / 2;
+            const outsideRadius = 230;
+            const textRadius = 155;
+            const insideRadius = 40;
+
+            ctx.clearRect(0, 0, BASE_SIZE, BASE_SIZE);
+
+            ctx.strokeStyle = "#1e293b";
+            ctx.lineWidth = 3;
+
+            for (let i = 0; i < teams.length; i++) {
+                const angle = startAngle + i * arc;
+                
+                // Evita que a última fatia tenha a mesma cor da primeira se for ímpar
+                let colorIndex = i % sliceColors.length;
+                if (i === teams.length - 1 && colorIndex === 0 && teams.length % sliceColors.length !== 0) {
+                    colorIndex = 1; 
+                }
+                ctx.fillStyle = sliceColors[colorIndex];
+
+                // Desenhar fatia
+                ctx.beginPath();
+                ctx.arc(center, center, outsideRadius, angle, angle + arc, false);
+                ctx.arc(center, center, insideRadius, angle + arc, angle, true);
+                ctx.fill();
+                ctx.stroke();
+
+                // Desenhar Texto
+                ctx.save();
+                ctx.translate(
+                    center + Math.cos(angle + arc / 2) * textRadius, 
+                    center + Math.sin(angle + arc / 2) * textRadius
+                );
+                ctx.rotate(angle + arc / 2 + Math.PI / 2);
+                
+                const text = teams[i];
+                const displayText = text.length > 18 ? text.substring(0, 16) + '...' : text;
+                
+                // Sombra do texto para melhorar legibilidade
+                ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
+                ctx.shadowOffsetX = 1;
+                ctx.shadowOffsetY = 1;
+                ctx.shadowBlur = 3;
+                
+                ctx.fillStyle = "#ffffff";
+                ctx.font = 'bold 15px "Segoe UI", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(displayText, 0, 5); 
+                ctx.restore();
+            }
+
+            // CENTRO DA ROLETA
+            ctx.beginPath();
+            ctx.arc(center, center, insideRadius, 0, Math.PI * 2, false);
+            ctx.fillStyle = "#0f172a";
+            ctx.fill();
+            ctx.strokeStyle = "#38bdf8";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            // Ponto central brilhante
+            ctx.beginPath();
+            ctx.arc(center, center, insideRadius / 3, 0, Math.PI * 2, false);
+            ctx.fillStyle = "#38bdf8";
+            ctx.fill();
+        }
+
+        function spinWheel() {
+            if (isSpinning || teams.length < 2) return;
+            
+            initAudio(); // Inicia contexto de áudio
+            isSpinning = true;
+            spinBtn.disabled = true;
+
+            // Parâmetros de rotação aleatórios
+            spinAngleStart = Math.random() * 10 + 20;
+            spinTime = 0;
+            spinTimeTotal = Math.random() * 3000 + 4500; // Entre 4.5s e 7.5s de giro
+            
+            rotateWheel();
+        }
+
+        function rotateWheel() {
+            spinTime += 20; // 50fps
+            if (spinTime >= spinTimeTotal) {
+                stopRotateWheel();
+                return;
+            }
+            
+            // Função de Easing (suavidade)
+            const spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
+            startAngle += (spinAngle * Math.PI / 180);
+            drawWheel();
+
+            // Lógica do som de "TIC" baseada na posição do ponteiro (topo)
+            const degrees = (startAngle * 180 / Math.PI) + 90; // +90 porque o ponteiro está em cima
+            const ardeg = arc * 180 / Math.PI;
+            const currentSegment = Math.floor((360 - (degrees % 360)) / ardeg);
+            
+            if (currentSegment !== lastSegmentIndex) {
+                playTickSound();
+                lastSegmentIndex = currentSegment;
+            }
+
+            spinTimeout = requestAnimationFrame(rotateWheel);
+        }
+
+        function stopRotateWheel() {
+            cancelAnimationFrame(spinTimeout);
+            
+            const degrees = (startAngle * 180 / Math.PI) + 90;
+            const ardeg = arc * 180 / Math.PI;
+            const index = Math.floor((360 - (degrees % 360)) / ardeg) % teams.length;
+            const winningTeam = teams[index];
+
+            // Efeito de Confete
+            confetti({
+                particleCount: 150,
+                spread: 90,
+                origin: { y: 0.6 },
+                colors: ['#2563eb', '#eab308', '#16a34a', '#ef4444', '#ffffff']
+            });
+
+            winnerNameText.textContent = winningTeam;
+            winnerModal.classList.add('active');
+
+            addHistory(winningTeam);
+
+            // Remover item sorteado
+            if (document.getElementById('autoRemove').checked) {
+                teams.splice(index, 1);
+                teamsInput.value = teams.join('\n');
+            }
+
+            isSpinning = false;
+        }
+
+        // Função matemática para suavizar o final do giro
+        function easeOut(t, b, c, d) {
+            const ts = (t /= d) * t;
+            const tc = ts * t;
+            return b + c * (tc + -3 * ts + 3 * t);
+        }
+
+        function closeModal() {
+            winnerModal.classList.remove('active');
+            updateWheel();
+        }
+
+        function addHistory(name) {
+            if (emptyHistoryText) emptyHistoryText.style.display = 'none';
+            
+            const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.innerHTML = `<strong>${name}</strong> <span class="history-time">${time}</span>`;
+            historyList.prepend(item);
+        }
+
+        function clearHistory() {
+            historyList.innerHTML = '<span id="emptyHistory" style="color: #64748b; display: block; text-align: center; margin-top: 10px;">Nenhum sorteio realizado.</span>';
+        }
+
+        // Inicialização
+        window.onload = () => {
+            initCanvasScale();
+            load19Schools();
+        };
+
+        // Responsividade caso a tela mude de tamanho
+        window.onresize = () => {
+            initCanvasScale();
+            drawWheel();
+        }
+    </script>
+</body>
+</html>
