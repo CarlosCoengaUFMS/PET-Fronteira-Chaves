@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Admin - Chaveamento de Robótica</title>
+
+    <!-- Supabase CDN + Cliente -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: #0f172a; margin: 0; padding: 15px; color: #f8fafc; min-height: 100vh; }
+        
+        header { 
+            display: flex; 
+            flex-wrap: wrap;
+            justify-content: space-between; 
+            align-items: center; 
+            background: #1e293b; 
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+            margin-bottom: 20px; 
+            border: 1px solid #334155; 
+            gap: 15px;
+        }
+        h1 { margin: 0; font-size: 20px; color: #38bdf8; display: flex; align-items: center; gap: 10px; }
+        
+        .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn { 
+            background-color: #2563eb; 
+            color: white; 
+            border: none; 
+            padding: 10px 16px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            text-decoration: none; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            font-size: 13px;
+        }
+        .btn:hover { background-color: #1d4ed8; }
+        .btn-success { background-color: #16a34a; }
+        .btn-success:hover { background-color: #15803d; }
+        .btn-danger { background-color: #dc2626; }
+        .btn-danger:hover { background-color: #b91c1c; }
+
+        /* Estrutura da Pirâmide */
+        .pyramid-outer-container {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .pyramid-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            min-width: max-content;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .pyramid-level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .level-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #38bdf8;
+            background: #1e293b;
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .level-matches {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Card de Match Compacto para Formar Pirâmide */
+        .match { 
+            background: #1e293b; 
+            border: 1px solid #334155; 
+            border-radius: 8px; 
+            padding: 8px; 
+            width: 150px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); 
+            text-align: center;
+        }
+        .match-label { font-size: 9px; font-weight: bold; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .vs-divider { font-size: 8px; font-weight: bold; color: #64748b; margin: 3px 0; }
+
+        input { 
+            width: 100%; 
+            padding: 6px; 
+            background: #0f172a;
+            color: #f8fafc;
+            border: 1px solid #334155; 
+            border-radius: 5px; 
+            font-size: 13px; 
+            outline: none; 
+            text-align: center;
+            transition: 0.2s; 
+        }
+        input:focus { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+
+        /* Estilizações Específicas do Desenho */
+        .yellow-box { background: #422006; border-color: #ca8a04; }
+        .yellow-box .match-label { color: #fde047; }
+        .yellow-box input { background: #713f12; color: #fef08a; border-color: #a16207; }
+
+        .blue-box { background: #172554; border-color: #2563eb; }
+        .blue-box .match-label { color: #93c5fd; }
+        .blue-box input { background: #1e40af; color: #dbeafe; border-color: #1d4ed8; }
+
+        .dark-box { background: #000000; border-color: #dc2626; }
+        .dark-box .match-label { color: #fca5a5; }
+        .dark-box input { background: #450a0a; color: #fecaca; border-color: #991b1b; }
+
+        .champ-card { 
+            background: linear-gradient(135deg, #ca8a04, #eab308); 
+            border: 2px solid #fef08a; 
+            padding: 12px;
+            width: 220px;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.3);
+        }
+        .champ-card .match-label { color: #451a03; font-weight: 900; font-size: 12px; }
+        .champ-card input { font-weight: bold; font-size: 14px; background: #fef08a; color: #000; border-color: #ca8a04; }
+
+        @media (max-width: 600px) {
+            header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-actions { justify-content: center; }
+            .btn { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>⚙️ Painel Admin - Robótica</h1>
+        <div class="header-actions">
+            <button class="btn btn-success" onclick="saveData()">💾 Salvar Chaveamento</button>
+            <a href="visitor.html" target="_blank" class="btn">👁️ Visão Visitante</a>
+            <button class="btn btn-danger" onclick="logout()">🚪 Sair</button>
+        </div>
+    </header>
+
+    <form id="bracketForm">
+        <div class="pyramid-outer-container">
+            <div class="pyramid-container">
+                
+                <!-- TOPO: CAMPEÃO -->
+                <div class="pyramid-level">
+                    <div class="match champ-card">
+                        <span class="match-label">🏆 CAMPEÃO 🏆</span>
+                        <input type="text" id="champ" placeholder="Nome do Campeão">
+                    </div>
+                </div>
+
+                <!-- 5º NÍVEL: GRANDE FINAL -->
+                <div class="pyramid-level">
+                    <div class="level-title">5º - Grande Final</div>
+                    <div class="level-matches">
+                        <div class="match">
+                            <span class="match-label">Disputa Título</span>
+                            <input type="text" id="r5_m1_t1" placeholder="Finalista 01">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r5_m1_t2" placeholder="Finalista 02">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4º NÍVEL: 4ª RODADA -->
+                <div class="pyramid-level">
+                    <div class="level-title">4º - 4ª Rodada</div>
+                    <div class="level-matches">
+                        <div class="match dark-box">
+                            <span class="match-label">Melhor Perdedor 01-02</span>
+                            <input type="text" id="r4_m1_t1" placeholder="Melhor Perdedor">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r4_m1_t2" placeholder="Vencedor Semi 1">
+                        </div>
+                        <div class="match blue-box">
+                            <span class="match-label">Sorteio Chapéu</span>
+                            <input type="text" id="r4_m2_t1" placeholder="Vencedor Semi 2">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r4_m2_t2" value="Sorteio Chapéu">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3º NÍVEL: 3ª RODADA -->
+                <div class="pyramid-level">
+                    <div class="level-title">3º - 3ª Rodada</div>
+                    <div class="level-matches">
+                        <div class="match">
+                            <span class="match-label">Semifinal 01</span>
+                            <input type="text" id="r3_m1_t1" placeholder="Classif. Jogo 1">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r3_m1_t2" placeholder="Classif. Jogo 2">
+                        </div>
+                        <div class="match yellow-box">
+                            <span class="match-label">Novo Sorteio</span>
+                            <input type="text" id="r3_m2_t1" placeholder="Classif. Jogo 3">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r3_m2_t2" value="Sorteado Amarelo">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2º NÍVEL: 2ª RODADA -->
+                <div class="pyramid-level">
+                    <div class="level-title">2º - 2ª Rodada</div>
+                    <div class="level-matches">
+                        <div class="match">
+                            <span class="match-label">Jogo 01</span>
+                            <input type="text" id="r2_m1_t1" placeholder="Venc. Conf 1">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r2_m1_t2" placeholder="Venc. Conf 2">
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Jogo 02</span>
+                            <input type="text" id="r2_m2_t1" placeholder="Venc. Conf 3">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r2_m2_t2" placeholder="Venc. Conf 4">
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Jogo 03</span>
+                            <input type="text" id="r2_m3_t1" placeholder="Venc. Conf 5">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r2_m3_t2" placeholder="Venc. Conf 6">
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Jogo 04</span>
+                            <input type="text" id="r2_m4_t1" placeholder="Venc. Conf 7">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r2_m4_t2" placeholder="Venc. Repescagem">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1º NÍVEL: 1ª RODADA (BASE DA PIRÂMIDE) -->
+                <div class="pyramid-level">
+                    <div class="level-title">1º - 1ª Rodada (Mata-Mata)</div>
+                    <div class="level-matches">
+                        <div class="match">
+                            <span class="match-label">Conf 01</span>
+                            <input type="text" id="r1_m1_t1" value="Escola A1">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r1_m1_t2" value="Escola A2">
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Conf 02</span>
+                            <input type="text" id="r1_m2_t1" value="Escola B1">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r1_m2_t2" value="Escola B2">
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Conf 03</span>
+                            <input type="text" id="r1_m3_t1" value="Escola C1">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r1_m3_t2" value="Escola C2">
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Conf 04</span>
+                            <input type="text" id="r1_m4_t1" value="Escola D1">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r1_m4_t2" value="Escola D2">
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Conf 05</span>
+                            <input type="text" id="r1_m5_t1" value="Escola E1">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r1_m5_t2" value="Escola E2">
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Conf 06</span>
+                            <input type="text" id="r1_m6_t1" value="Escola F1">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r1_m6_t2" value="Escola F2">
+                        </div>
+                        <div class="match">
+                            <span class="match-label">Conf 07</span>
+                            <input type="text" id="r1_m7_t1" value="Escola G1">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r1_m7_t2" value="Escola G2">
+                        </div>
+                        <div class="match yellow-box">
+                            <span class="match-label">Sorteio 1º</span>
+                            <input type="text" id="r1_m8_t1" value="Amarelo 01">
+                            <div class="vs-divider">VS</div>
+                            <input type="text" id="r1_m8_t2" value="Amarelo 02">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <script>
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.href = 'login.html';
+            } else {
+                loadData();
+            }
+        }
+
+        async function logout() {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        }
+
+        async function saveData() {
+            const inputs = document.querySelectorAll('#bracketForm input');
+            const formData = {};
+            inputs.forEach(input => {
+                formData[input.id] = input.value;
+            });
+
+            const { error } = await supabase
+                .from('tournament_data')
+                .upsert({ id: 1, data: formData, updated_at: new Date() });
+
+            if (error) {
+                alert('Erro ao salvar no banco: ' + error.message);
+            } else {
+                alert('✅ Chaveamento salvo com sucesso!');
+            }
+        }
+
+        async function loadData() {
+            const { data, error } = await supabase
+                .from('tournament_data')
+                .select('data')
+                .eq('id', 1)
+                .single();
+
+            if (data && data.data) {
+                Object.keys(data.data).forEach(id => {
+                    const input = document.getElementById(id);
+                    if (input) input.value = data.data[id];
+                });
+            }
+        }
+
+        window.onload = checkAuth;
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Admin Robótica</title>
+    <!-- CDN do Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b1120; margin: 0; padding: 20px; color: #f8fafc; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 40px 30px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); text-align: center; }
+        .login-card h2 { margin: 0 0 10px 0; color: #38bdf8; font-size: 24px; }
+        .login-card p { color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
+        .input-group { text-align: left; margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; font-weight: bold; text-transform: uppercase; color: #cbd5e1; margin-bottom: 6px; }
+        input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; font-size: 14px; outline: none; }
+        input:focus { border-color: #38bdf8; }
+        .btn-submit { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .btn-submit:hover { background: #38bdf8; color: #0b1120; }
+        .error-message { background: #450a0a; color: #fca5a5; border: 1px solid #991b1b; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; display: none; }
+        .back-link { display: inline-block; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2>🔒 Acesso Restrito</h2>
+        <p>Painel de Controle do Chaveamento</p>
+
+        <div id="errorMessage" class="error-message">E-mail ou senha incorretos!</div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="input-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" placeholder="Sua senha" required>
+            </div>
+
+            <button type="submit" id="btnSubmit" class="btn-submit">Entrar no Painel</button>
+        </form>
+
+        <a href="index.html" class="back-link">← Voltar para o Início</a>
+    </div>
+
+    <script>
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+            const btnSubmit = document.getElementById('btnSubmit');
+
+            errorDiv.style.display = 'none';
+            btnSubmit.textContent = 'Autenticando...';
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+            if (error) {
+                errorDiv.textContent = error.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos!' : error.message;
+                errorDiv.style.display = 'block';
+                btnSubmit.textContent = 'Entrar no Painel';
+            } else {
+                window.location.href = 'admin.html';
+            }
+        }
+    </script>
+</body>
+</html>

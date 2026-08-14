@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Admin Robótica</title>
+    <!-- CDN do Supabase + Script de Auth -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b1120; margin: 0; padding: 20px; color: #f8fafc; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 40px 30px; width: 100%; max-width: 420px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4); text-align: center; }
+        .login-card h2 { margin: 0 0 10px 0; color: #38bdf8; font-size: 24px; }
+        .login-card p { color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
+        .input-group { text-align: left; margin-bottom: 18px; }
+        .input-group label { display: block; font-size: 12px; font-weight: bold; text-transform: uppercase; color: #cbd5e1; margin-bottom: 6px; }
+        input { width: 100%; padding: 12px; background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; font-size: 14px; outline: none; }
+        input:focus { border-color: #38bdf8; }
+        .btn-submit { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .btn-submit:hover { background: #38bdf8; color: #0b1120; }
+        .btn-submit:disabled { background: #475569; cursor: not-allowed; }
+        .error-message { background: #450a0a; color: #fca5a5; border: 1px solid #991b1b; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; display: none; text-align: left; }
+        .success-message { background: #064e3b; color: #6ee7b7; border: 1px solid #047857; padding: 10px; border-radius: 6px; font-size: 13px; margin-bottom: 15px; display: none; text-align: left; }
+        .back-link { display: inline-block; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .back-link:hover { color: #38bdf8; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2>👤 Novo Administrador</h2>
+        <p>Cadastre uma conta para gerenciar o chaveamento</p>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="input-group">
+                <label for="name">Nome Completo</label>
+                <input type="text" id="name" placeholder="Ex: João Silva" required>
+            </div>
+
+            <div class="input-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" placeholder="Mínimo 6 caracteres" required minlength="6">
+            </div>
+
+            <div class="input-group">
+                <label for="confirmPassword">Confirmar Senha</label>
+                <input type="password" id="confirmPassword" placeholder="Repita a senha" required minlength="6">
+            </div>
+
+            <button type="submit" id="btnSubmit" class="btn-submit">Criar Conta</button>
+        </form>
+
+        <a href="login.html" class="back-link">← Já tem uma conta? Ir para o Login</a>
+    </div>
+
+    <script>
+        async function handleRegister(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            const btnSubmit = document.getElementById('btnSubmit');
+
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
+            // 1. Validação de senha
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'As senhas não coincidem!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            btnSubmit.textContent = 'Cadastrando...';
+            btnSubmit.disabled = true;
+
+            // 2. Cadastro no Supabase
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: { name: name }
+                }
+            });
+
+            if (error) {
+                errorDiv.textContent = 'Erro ao cadastrar: ' + error.message;
+                errorDiv.style.display = 'block';
+                btnSubmit.textContent = 'Criar Conta';
+                btnSubmit.disabled = false;
+            } else {
+                // Se o Supabase estiver configurado com auto-login sem confirmação por e-mail
+                if (data.user && data.session) {
+                    successDiv.textContent = '✅ Cadastro realizado com sucesso! Entrando...';
+                    successDiv.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1500);
+                } else {
+                    // Caso o Supabase exija confirmação de e-mail
+                    successDiv.textContent = '✅ Cadastro feito! Verifique seu e-mail para confirmar a conta antes de fazer o login.';
+                    successDiv.style.display = 'block';
+                    btnSubmit.textContent = 'Criar Conta';
+                    btnSubmit.disabled = false;
+                    document.getElementById('registerForm').reset();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

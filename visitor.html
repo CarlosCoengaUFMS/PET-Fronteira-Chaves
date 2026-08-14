@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Chaveamento Oficial - Campeonato de Robótica</title>
+    
+    <!-- Supabase CDN + Cliente -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: #0b1120; margin: 0; padding: 15px; color: #f8fafc; min-height: 100vh; }
+        
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { margin: 0; font-size: 22px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+        p { color: #64748b; margin-top: 5px; font-weight: 500; font-size: 13px; }
+
+        /* Estrutura da Pirâmide */
+        .pyramid-outer-container {
+            width: 100%;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .pyramid-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            min-width: max-content;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .pyramid-level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .level-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #38bdf8;
+            background: #1e293b;
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid #334155;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .level-matches {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Card de Match Compacto */
+        .match { 
+            background: #1e293b; 
+            border: 1px solid #334155; 
+            border-radius: 8px; 
+            padding: 8px; 
+            width: 150px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); 
+            text-align: center;
+        }
+        .match-label { font-size: 9px; font-weight: bold; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .team { 
+            background: #0f172a; 
+            padding: 6px 8px; 
+            border-radius: 5px; 
+            font-size: 12px; 
+            font-weight: 600; 
+            color: #f1f5f9; 
+            border: 1px solid #1e293b; 
+            word-break: break-all; 
+            min-height: 30px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        
+        .vs-divider { font-size: 8px; font-weight: bold; color: #475569; margin: 3px 0; }
+
+        /* Estilizações Específicas do Desenho */
+        .yellow-box { background: #422006; border-color: #ca8a04; }
+        .yellow-box .match-label { color: #fde047; }
+        .yellow-box .team { background: #713f12; color: #fef08a; border-color: #a16207; }
+
+        .blue-box { background: #172554; border-color: #2563eb; }
+        .blue-box .match-label { color: #93c5fd; }
+        .blue-box .team { background: #1e40af; color: #dbeafe; border-color: #1d4ed8; }
+
+        .dark-box { background: #000000; border-color: #dc2626; }
+        .dark-box .match-label { color: #fca5a5; }
+        .dark-box .team { background: #450a0a; color: #fecaca; border-color: #991b1b; }
+
+        .champ-card { 
+            background: linear-gradient(135deg, #ca8a04, #eab308); 
+            color: #000; 
+            padding: 12px; 
+            border-radius: 10px; 
+            text-align: center; 
+            width: 220px;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); 
+            border: 2px solid #fef08a; 
+        }
+        .champ-title { font-size: 11px; font-weight: 900; letter-spacing: 1px; color: #451a03; }
+        .champ-name { font-size: 16px; font-weight: 800; color: #000; margin-top: 4px; word-break: break-all; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🤖 Chaveamento Oficial</h1>
+        <p>Acompanhamento dos Confrontos em Tempo Real</p>
+    </header>
+
+    <div class="pyramid-outer-container">
+        <div class="pyramid-container">
+            
+            <!-- TOPO: CAMPEÃO -->
+            <div class="pyramid-level">
+                <div class="champ-card">
+                    <div class="champ-title">🏆 CAMPEÃO 🏆</div>
+                    <div class="champ-name" id="champ">-</div>
+                </div>
+            </div>
+
+            <!-- 5º NÍVEL: GRANDE FINAL -->
+            <div class="pyramid-level">
+                <div class="level-title">5º - Grande Final</div>
+                <div class="level-matches">
+                    <div class="match">
+                        <span class="match-label">Disputa Título</span>
+                        <div class="team" id="r5_m1_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r5_m1_t2">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4º NÍVEL: 4ª RODADA -->
+            <div class="pyramid-level">
+                <div class="level-title">4º - 4ª Rodada</div>
+                <div class="level-matches">
+                    <div class="match dark-box">
+                        <span class="match-label">Melhor Perdedor 01-02</span>
+                        <div class="team" id="r4_m1_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r4_m1_t2">-</div>
+                    </div>
+                    <div class="match blue-box">
+                        <span class="match-label">Sorteio Chapéu</span>
+                        <div class="team" id="r4_m2_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r4_m2_t2">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3º NÍVEL: 3ª RODADA -->
+            <div class="pyramid-level">
+                <div class="level-title">3º - 3ª Rodada</div>
+                <div class="level-matches">
+                    <div class="match">
+                        <span class="match-label">Semifinal 01</span>
+                        <div class="team" id="r3_m1_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r3_m1_t2">-</div>
+                    </div>
+                    <div class="match yellow-box">
+                        <span class="match-label">Novo Sorteio</span>
+                        <div class="team" id="r3_m2_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r3_m2_t2">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2º NÍVEL: 2ª RODADA -->
+            <div class="pyramid-level">
+                <div class="level-title">2º - 2ª Rodada</div>
+                <div class="level-matches">
+                    <div class="match">
+                        <span class="match-label">Jogo 01</span>
+                        <div class="team" id="r2_m1_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r2_m1_t2">-</div>
+                    </div>
+                    <div class="match">
+                        <span class="match-label">Jogo 02</span>
+                        <div class="team" id="r2_m2_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r2_m2_t2">-</div>
+                    </div>
+                    <div class="match">
+                        <span class="match-label">Jogo 03</span>
+                        <div class="team" id="r2_m3_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r2_m3_t2">-</div>
+                    </div>
+                    <div class="match">
+                        <span class="match-label">Jogo 04</span>
+                        <div class="team" id="r2_m4_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r2_m4_t2">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1º NÍVEL: 1ª RODADA (BASE DA PIRÂMIDE) -->
+            <div class="pyramid-level">
+                <div class="level-title">1º - 1ª Rodada (Mata-Mata)</div>
+                <div class="level-matches">
+                    <div class="match">
+                        <span class="match-label">Conf 01</span>
+                        <div class="team" id="r1_m1_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r1_m1_t2">-</div>
+                    </div>
+                    <div class="match">
+                        <span class="match-label">Conf 02</span>
+                        <div class="team" id="r1_m2_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r1_m2_t2">-</div>
+                    </div>
+                    <div class="match">
+                        <span class="match-label">Conf 03</span>
+                        <div class="team" id="r1_m3_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r1_m3_t2">-</div>
+                    </div>
+                    <div class="match">
+                        <span class="match-label">Conf 04</span>
+                        <div class="team" id="r1_m4_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r1_m4_t2">-</div>
+                    </div>
+                    <div class="match">
+                        <span class="match-label">Conf 05</span>
+                        <div class="team" id="r1_m5_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r1_m5_t2">-</div>
+                    </div>
+                    <div class="match">
+                        <span class="match-label">Conf 06</span>
+                        <div class="team" id="r1_m6_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r1_m6_t2">-</div>
+                    </div>
+                    <div class="match">
+                        <span class="match-label">Conf 07</span>
+                        <div class="team" id="r1_m7_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r1_m7_t2">-</div>
+                    </div>
+                    <div class="match yellow-box">
+                        <span class="match-label">Sorteio 1º</span>
+                        <div class="team" id="r1_m8_t1">-</div>
+                        <div class="vs-divider">VS</div>
+                        <div class="team" id="r1_m8_t2">-</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function renderBracket(bracketData) {
+            if (!bracketData) return;
+            Object.keys(bracketData).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = bracketData[id] || '-';
+                }
+            });
+        }
+
+        async function fetchVisitorData() {
+            const { data, error } = await supabase
+                .from('tournament_data')
+                .select('data')
+                .eq('id', 1)
+                .single();
+
+            if (data && data.data) {
+                renderBracket(data.data);
+            }
+        }
+
+        function subscribeRealtime() {
+            supabase
+                .channel('public:tournament_data')
+                .on(
+                    'postgres_changes',
+                    { event: 'UPDATE', schema: 'public', table: 'tournament_data', filter: 'id=eq.1' },
+                    (payload) => {
+                        if (payload.new && payload.new.data) {
+                            renderBracket(payload.new.data);
+                        }
+                    }
+                )
+                .subscribe();
+        }
+
+        window.onload = () => {
+            fetchVisitorData();
+            subscribeRealtime();
+        };
+    </script>
+</body>
+</html>
