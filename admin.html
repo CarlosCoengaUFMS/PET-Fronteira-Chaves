@@ -341,93 +341,171 @@
     </form>
 
     <script>
-        function enableRadioToggle() {
-            document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('click', function() {
-                    if (this.dataset.waschecked === 'true') {
-                        this.checked = false;
-                        this.dataset.waschecked = 'false';
-                    } else {
-                        document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => r.dataset.waschecked = 'false');
-                        this.dataset.waschecked = 'true';
-                    }
-                });
-            });
+     // ==========================================
+// FUNÇÃO DE AUTOMATIZAÇÃO DAS CHAVES
+// ==========================================
+function updateBracket() {
+    // Funções auxiliares para pegar e setar valores com segurança
+    const getVal = id => document.getElementById(id) ? document.getElementById(id).value : '';
+    const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val; };
+    
+    // Função que verifica o rádio e sobe o vencedor
+    const updateMatch = (radioName, t1Id, t2Id, targetId) => {
+        const radio = document.querySelector(`input[name="${radioName}"]:checked`);
+        if (radio) {
+            setVal(targetId, radio.value === 't1' ? getVal(t1Id) : getVal(t2Id));
+        } else {
+            setVal(targetId, ''); // Limpa o campo da frente se o rádio for desmarcado
         }
+    };
 
-        async function checkAuth() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                window.location.href = 'login.html';
+    // 1º NÍVEL (R1) -> 2º NÍVEL (R2)
+    updateMatch('w_r1_m1', 'r1_m1_t1', 'r1_m1_t2', 'r2_m1_t1');
+    updateMatch('w_r1_m2', 'r1_m2_t1', 'r1_m2_t2', 'r2_m1_t2');
+    updateMatch('w_r1_m3', 'r1_m3_t1', 'r1_m3_t2', 'r2_m2_t1');
+    updateMatch('w_r1_m4', 'r1_m4_t1', 'r1_m4_t2', 'r2_m2_t2');
+    updateMatch('w_r1_m5', 'r1_m5_t1', 'r1_m5_t2', 'r2_m3_t1');
+    updateMatch('w_r1_m6', 'r1_m6_t1', 'r1_m6_t2', 'r2_m3_t2');
+    updateMatch('w_r1_m7', 'r1_m7_t1', 'r1_m7_t2', 'r2_m4_t1');
+    updateMatch('w_r1_m8', 'r1_m8_t1', 'r1_m8_t2', 'r2_m4_t2');
+    updateMatch('w_r1_m9', 'r1_m9_t1', 'r1_m9_t2', 'r2_m5_t1');
+    
+    // Chapéu R1 -> Vai direto para R2 M5 T2
+    setVal('r2_m5_t2', getVal('r1_m10_t1'));
+
+    // NOTA: A passagem da 2ª para a 3ª Rodada é manual devido ao "Novo Sorteio".
+
+    // 3º NÍVEL (R3) -> 4º NÍVEL (R4)
+    updateMatch('w_r3_m1', 'r3_m1_t1', 'r3_m1_t2', 'r4_m1_t1');
+    updateMatch('w_r3_m2', 'r3_m2_t1', 'r3_m2_t2', 'r4_m1_t2');
+    
+    // Chapéu R3 -> Vai direto para R4 M2 T1
+    setVal('r4_m2_t1', getVal('r3_m3_t1'));
+
+    // 4º NÍVEL (R4) -> 5º NÍVEL (R5 - Grande Final)
+    updateMatch('w_r4_m1', 'r4_m1_t1', 'r4_m1_t2', 'r5_m1_t1');
+    updateMatch('w_r4_m2', 'r4_m2_t1', 'r4_m2_t2', 'r5_m1_t2');
+
+    // 5º NÍVEL (R5) -> PÓDIO (Campeão e 2º Lugar)
+    const r5Radio = document.querySelector(`input[name="w_r5_m1"]:checked`);
+    if (r5Radio) {
+        if (r5Radio.value === 't1') {
+            setVal('champ', getVal('r5_m1_t1'));
+            setVal('second_place', getVal('r5_m1_t2'));
+        } else {
+            setVal('champ', getVal('r5_m1_t2'));
+            setVal('second_place', getVal('r5_m1_t1'));
+        }
+    } else {
+        setVal('champ', '');
+        setVal('second_place', '');
+    }
+}
+
+// ==========================================
+// FUNÇÕES ORIGINAIS MODIFICADAS
+// ==========================================
+function enableRadioToggle() {
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+        radio.addEventListener('click', function() {
+            if (this.dataset.waschecked === 'true') {
+                this.checked = false;
+                this.dataset.waschecked = 'false';
             } else {
-                loadData();
+                document.querySelectorAll(`input[name="${this.name}"]`).forEach(r => r.dataset.waschecked = 'false');
+                this.dataset.waschecked = 'true';
             }
-        }
+            // Chama a atualização do chaveamento toda vez que um rádio for clicado
+            updateBracket(); 
+        });
+    });
+}
 
-        async function logout() {
-            await supabase.auth.signOut();
-            window.location.href = 'login.html';
-        }
+function resetWinners() {
+    if (confirm("Deseja desmarcar todos os vencedores selecionados?")) {
+        const radios = document.querySelectorAll('#bracketForm input[type="radio"]');
+        radios.forEach(radio => {
+            radio.checked = false;
+            radio.dataset.waschecked = 'false';
+        });
+        // Atualiza a chave para limpar todos os nomes que haviam subido
+        updateBracket();
+    }
+}
 
-        function resetWinners() {
-            if (confirm("Deseja desmarcar todos os vencedores selecionados?")) {
-                const radios = document.querySelectorAll('#bracketForm input[type="radio"]');
-                radios.forEach(radio => {
-                    radio.checked = false;
-                    radio.dataset.waschecked = 'false';
-                });
+async function checkAuth() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        window.location.href = 'login.html';
+    } else {
+        loadData();
+    }
+}
+
+async function logout() {
+    await supabase.auth.signOut();
+    window.location.href = 'login.html';
+}
+
+async function saveData() {
+    const formData = {};
+
+    const inputs = document.querySelectorAll('#bracketForm input[type="text"]');
+    inputs.forEach(input => {
+        formData[input.id] = input.value;
+    });
+
+    const radios = document.querySelectorAll('#bracketForm input[type="radio"]:checked');
+    radios.forEach(radio => {
+        formData[radio.name] = radio.value;
+    });
+
+    const { error } = await supabase
+        .from('tournament_data')
+        .upsert({ id: 1, data: formData, updated_at: new Date() });
+
+    if (error) {
+        alert('Erro ao salvar no banco: ' + error.message);
+    } else {
+        alert('✅ Chaveamento salvo com sucesso!');
+    }
+}
+
+async function loadData() {
+    const { data } = await supabase
+        .from('tournament_data')
+        .select('data')
+        .eq('id', 1)
+        .single();
+
+    if (data && data.data) {
+        Object.keys(data.data).forEach(key => {
+            const input = document.getElementById(key);
+            if (input && input.type === 'text') {
+                input.value = data.data[key];
+            } else if (key.startsWith('w_')) {
+                const radio = document.querySelector(`input[name="${key}"][value="${data.data[key]}"]`);
+                if (radio) {
+                    radio.checked = true;
+                    radio.dataset.waschecked = 'true';
+                }
             }
-        }
+        });
+    }
+    enableRadioToggle();
+    // Revalida a árvore para garantir que os dados renderizados estão coesos
+    updateBracket(); 
+}
 
-        async function saveData() {
-            const formData = {};
-
-            const inputs = document.querySelectorAll('#bracketForm input[type="text"]');
-            inputs.forEach(input => {
-                formData[input.id] = input.value;
-            });
-
-            const radios = document.querySelectorAll('#bracketForm input[type="radio"]:checked');
-            radios.forEach(radio => {
-                formData[radio.name] = radio.value;
-            });
-
-            const { error } = await supabase
-                .from('tournament_data')
-                .upsert({ id: 1, data: formData, updated_at: new Date() });
-
-            if (error) {
-                alert('Erro ao salvar no banco: ' + error.message);
-            } else {
-                alert('✅ Chaveamento salvo com sucesso!');
-            }
-        }
-
-        async function loadData() {
-            const { data } = await supabase
-                .from('tournament_data')
-                .select('data')
-                .eq('id', 1)
-                .single();
-
-            if (data && data.data) {
-                Object.keys(data.data).forEach(key => {
-                    const input = document.getElementById(key);
-                    if (input && input.type === 'text') {
-                        input.value = data.data[key];
-                    } else if (key.startsWith('w_')) {
-                        const radio = document.querySelector(`input[name="${key}"][value="${data.data[key]}"]`);
-                        if (radio) {
-                            radio.checked = true;
-                            radio.dataset.waschecked = 'true';
-                        }
-                    }
-                });
-            }
-            enableRadioToggle();
-        }
-
-        window.onload = checkAuth;
+// Inicialização: Verifica a auth e adiciona o evento de digitação
+window.onload = () => {
+    checkAuth();
+    
+    // Adiciona evento de atualização caso o admin corrija um nome manualmente, já atualiza a frente
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+        input.addEventListener('input', updateBracket);
+    });
+};
     </script>
 </body>
 </html>
