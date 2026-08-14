@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manutenção - Chaveamentos Robótica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 32px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: scale(1.01);
+        }
+
+        .icon-robot {
+            font-size: 80px;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: pulse 2.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 25px 20px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .status-card .label {
+            display: block;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .status-card .value {
+            display: block;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #facc15;
+        }
+
+        .status-card .value .dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: blink 1.4s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .progress-wrapper {
+            margin: 30px 0 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 68%;
+            height: 100%;
+            background: linear-gradient(90deg, #f7971e, #ffd200);
+            border-radius: 100px;
+            animation: progressAnim 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes progressAnim {
+            0% { width: 60%; }
+            100% { width: 78%; }
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 14px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .info-item .info-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+        }
+
+        .info-item .info-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            margin-top: 4px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            color: #0f0c29;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 60px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: default;
+            box-shadow: 0 8px 20px rgba(247, 151, 30, 0.25);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(247, 151, 30, 0.35);
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: #64748b;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 25px;
+        }
+
+        .footer a {
+            color: #94a3b8;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #facc15;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Ícone de robô / engrenagem -->
+        <div class="icon-robot">⚙️🤖</div>
+
+        <h1>Em Manutenção</h1>
+        <p class="subtitle">
+            Estamos atualizando o sistema de chaveamentos para melhor atender você.<br>
+            Em breve tudo estará no ar novamente.
+        </p>
+
+        <div class="status-card">
+            <span class="label">Status do sistema</span>
+            <span class="value">
+                <span class="dot"></span> Em andamento
+            </span>
+        </div>
+
+        <div class="progress-wrapper">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-text">
+                <span>Iniciado</span>
+                <span>Quase lá...</span>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Previsão</div>
+                <div class="info-value">⏳ ~ 6 horas</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Responsável</div>
+                <div class="info-value">👨‍🔧 Equipe Robótica</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Chaveamentos afetados</div>
+                <div class="info-value">🔧 Todos</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Última atualização</div>
+                <div class="info-value" id="update-time">⏱️ agora</div>
+            </div>
+        </div>
+
+        <!-- Botão desabilitado (apenas visual) -->
+        <div class="btn">🔄 Acompanhar atualizações</div>
+
+        <div class="footer">
+            <p>
+                <span>🔌 Chaveamentos Robótica &bull; </span>
+                <span>Versão 2.1.0</span><br>
+                <span style="font-size: 0.75rem; color: #475569;">
+                    Em caso de emergência, entre em contato com o suporte.
+                </span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Atualiza a hora atual dinamicamente
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('update-time').textContent = `⏱️ ${hours}:${minutes}:${seconds}`;
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>
