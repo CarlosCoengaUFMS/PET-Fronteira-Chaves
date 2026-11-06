@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <title>Chaveamento Oficial - Campeonato de Robótica</title>
+    <title>Chaveamento Oficial - Robô Sumô & Cabo de Guerra</title>
     <link rel="icon" href="./styles/logo.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/auth.js"></script>
@@ -12,10 +12,25 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         body { background-color: #0b1120; margin: 0; padding: 15px; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
         
-        header { text-align: center; margin-bottom: 20px; }
+        header { text-align: center; margin-bottom: 15px; }
         .logo { width: 80px; max-width: 100%; height: auto; margin: 0 auto 10px; display: block; }
         h1 { margin: 0; font-size: 20px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
         p { color: #64748b; margin-top: 5px; font-weight: 500; font-size: 12px; }
+
+        /* SELETOR DE TORNEIOS (ABAS) */
+        .tournament-tabs {
+            display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: #1e293b; color: #94a3b8; border: 2px solid #334155; padding: 8px 20px;
+            border-radius: 20px; font-weight: 800; font-size: 13px; cursor: pointer; transition: all 0.2s;
+            display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .tab-btn:hover { border-color: #38bdf8; color: #f8fafc; }
+        .tab-btn.active {
+            background: #0284c7; color: #ffffff; border-color: #38bdf8;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+        }
 
         .pyramid-outer-container { width: 100%; overflow-x: auto; padding-bottom: 20px; flex: 1; }
         .pyramid-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; max-width: 1400px; margin: 0 auto; padding: 5px; }
@@ -132,9 +147,15 @@
 
     <header>
         <img src="styles/logo.png" alt="Logo Robótica" class="logo">
-        <h1>Chaveamento Oficial - 19 Escolas</h1>
+        <h1 id="mainTitle">Chaveamento Oficial - Robô Sumô</h1>
         <p>Acompanhamento dos Confrontos em Tempo Real</p>
     </header>
+
+    <!-- ABAS DE SELEÇÃO DO TORNEIO -->
+    <div class="tournament-tabs">
+        <button type="button" class="tab-btn active" id="tab1" onclick="switchTournament(1)">🥋 Robô Sumô</button>
+        <button type="button" class="tab-btn" id="tab2" onclick="switchTournament(2)">🪢 Cabo de Guerra</button>
+    </div>
 
     <div class="pyramid-outer-container">
         <div class="pyramid-container">
@@ -317,26 +338,55 @@
         </div>
     </div>
 
-    <!-- RODAPÉ COM ÍCONE DO GITHUB -->
-<footer>
-    <div class="footer-content">
-        <img src="styles/icon.png" alt="Ícone PET Fronteira" class="footer-icon">
-        <p class="footer-text">
-            <strong>Solicitante:</strong> <a href="https://petfronteira.duckdns.org/" target="_blank" rel="noopener noreferrer">PET Fronteira</a>
-        </p>
-        <span style="color: #334155; font-size: 18px;">|</span>
-        <p class="footer-text">
-            <strong>Criador:</strong> 
-            <a href="https://github.com/CarlosCoengaUFMS" target="_blank" rel="noopener noreferrer">
-                <img src="https://github.com/favicon.ico" alt="GitHub" style="width: 16px; height: 16px; vertical-align: middle; border-radius: 50%;">
-                CarlosCoengaUFMS
-            </a>
-        </p>
-    </div>
-</footer>
+    <footer>
+        <div class="footer-content">
+            <img src="styles/icon.png" alt="Ícone PET Fronteira" class="footer-icon">
+            <p class="footer-text">
+                <strong>Solicitante:</strong> <a href="https://petfronteira.duckdns.org/" target="_blank" rel="noopener noreferrer">PET Fronteira</a>
+            </p>
+            <span style="color: #334155; font-size: 18px;">|</span>
+            <p class="footer-text">
+                <strong>Criador:</strong> 
+                <a href="https://github.com/CarlosCoengaUFMS" target="_blank" rel="noopener noreferrer">
+                    <img src="https://github.com/favicon.ico" alt="GitHub" style="width: 16px; height: 16px; vertical-align: middle; border-radius: 50%;">
+                    CarlosCoengaUFMS
+                </a>
+            </p>
+        </div>
+    </footer>
 
     <script>
+        const TOURNAMENT_NAMES = {
+            1: "Robô Sumô",
+            2: "Cabo de Guerra"
+        };
+
+        let currentTournamentId = 1;
+        let realtimeChannel = null;
+
+        function clearBoard() {
+            document.querySelectorAll('.team, .champ-name, .silver-name, .bronze-name').forEach(el => {
+                el.textContent = '-';
+                el.classList.remove('winner', 'loser');
+            });
+        }
+
+        function switchTournament(id) {
+            currentTournamentId = id;
+            document.getElementById('tab1').classList.toggle('active', id === 1);
+            document.getElementById('tab2').classList.toggle('active', id === 2);
+            document.getElementById('mainTitle').textContent = `Chaveamento Oficial - ${TOURNAMENT_NAMES[id]}`;
+            
+            const newUrl = `${window.location.pathname}?t=${id}`;
+            window.history.replaceState({ path: newUrl }, '', newUrl);
+
+            clearBoard();
+            fetchVisitorData();
+            subscribeRealtime();
+        }
+
         function renderBracket(bracketData) {
+            clearBoard();
             if (!bracketData) return;
 
             Object.keys(bracketData).forEach(id => {
@@ -354,9 +404,6 @@
                 const t2 = matchCard.querySelectorAll('.team')[1];
 
                 if (t1 && t2) {
-                    t1.classList.remove('winner', 'loser');
-                    t2.classList.remove('winner', 'loser');
-
                     if (winnerValue === 't1') {
                         t1.classList.add('winner');
                         t2.classList.add('loser');
@@ -372,8 +419,8 @@
             const { data } = await supabase
                 .from('tournament_data')
                 .select('data')
-                .eq('id', 1)
-                .single();
+                .eq('id', currentTournamentId)
+                .maybeSingle();
 
             if (data && data.data) {
                 renderBracket(data.data);
@@ -381,11 +428,15 @@
         }
 
         function subscribeRealtime() {
-            supabase
-                .channel('public:tournament_data')
+            if (realtimeChannel) {
+                supabase.removeChannel(realtimeChannel);
+            }
+
+            realtimeChannel = supabase
+                .channel(`public:tournament_data:${currentTournamentId}`)
                 .on(
                     'postgres_changes',
-                    { event: 'UPDATE', schema: 'public', table: 'tournament_data', filter: 'id=eq.1' },
+                    { event: '*', schema: 'public', table: 'tournament_data', filter: `id=eq.${currentTournamentId}` },
                     (payload) => {
                         if (payload.new && payload.new.data) {
                             renderBracket(payload.new.data);
@@ -396,6 +447,15 @@
         }
 
         window.onload = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tParam = parseInt(urlParams.get('t'));
+            if (tParam === 1 || tParam === 2) {
+                currentTournamentId = tParam;
+                document.getElementById('tab1').classList.toggle('active', tParam === 1);
+                document.getElementById('tab2').classList.toggle('active', tParam === 2);
+                document.getElementById('mainTitle').textContent = `Chaveamento Oficial - ${TOURNAMENT_NAMES[tParam]}`;
+            }
+
             fetchVisitorData();
             subscribeRealtime();
         };
