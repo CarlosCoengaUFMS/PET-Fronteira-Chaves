@@ -14,17 +14,15 @@
         
         header { text-align: center; margin-bottom: 15px; }
         .logo { width: 80px; max-width: 100%; height: auto; margin: 0 auto 10px; display: block; }
-        h1 { margin: 0; font-size: 20px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
-        p { color: #64748b; margin-top: 5px; font-weight: 500; font-size: 12px; }
+        h1 { margin: 0; font-size: 20px; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SELETOR DE TORNEIOS (ABAS) */
         .tournament-tabs {
             display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;
         }
         .tab-btn {
             background: #1e293b; color: #94a3b8; border: 2px solid #334155; padding: 8px 20px;
             border-radius: 20px; font-weight: 800; font-size: 13px; cursor: pointer; transition: all 0.2s;
-            display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+            display: flex; align-items: center; gap: 6px; text-transform: uppercase;
         }
         .tab-btn:hover { border-color: #38bdf8; color: #f8fafc; }
         .tab-btn.active {
@@ -39,7 +37,7 @@
         .level-title {
             font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
             color: #38bdf8; background: #1e293b; padding: 6px 16px; border-radius: 20px;
-            border: 1px solid #334155; margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border: 1px solid #334155; margin-bottom: 12px;
         }
 
         .level-matches { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; }
@@ -47,15 +45,15 @@
         .match { 
             background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 8px; 
             width: 100%; max-width: 175px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4); text-align: center;
+            transition: all 0.3s ease;
         }
-        @media (max-width: 480px) { .match { max-width: 100%; } }
 
-        .match-label { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .match-label { font-size: 10px; font-weight: bold; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; display: block; }
 
         .team { 
             background: #0f172a; padding: 6px 8px; border-radius: 6px; font-size: 12px; font-weight: 600; 
             color: #f1f5f9; border: 1px solid #1e293b; word-break: break-all; min-height: 32px; 
-            display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: space-between;
         }
         
         .vs-divider { font-size: 9px; font-weight: bold; color: #475569; margin: 3px 0; }
@@ -64,12 +62,12 @@
             background: #14532d !important; border-color: #22c55e !important; color: #f0fdf4 !important;
             font-weight: 800; box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
         }
-        .team.winner::after { content: "👑"; font-size: 12px; margin-left: 5px; }
+        .team.winner::after { content: "👑"; font-size: 12px; }
 
         .team.loser {
             opacity: 0.4; background: #1e1e1e !important; border-color: #450a0a !important; color: #fca5a5 !important; text-decoration: line-through;
         }
-        .team.loser::after { content: "❌"; font-size: 10px; margin-left: 5px; text-decoration: none; }
+        .team.loser::after { content: "❌"; font-size: 10px; text-decoration: none; }
 
         .yellow-box { background: #422006; border-color: #ca8a04; }
         .yellow-box .match-label { color: #fde047; }
@@ -77,9 +75,7 @@
 
         .dark-box { background: #000000; border-color: #dc2626; }
         .dark-box .match-label { color: #fca5a5; }
-        .dark-box .team { background: #450a0a; color: #fecaca; border-color: #991b1b; }
 
-        /* PÓDIO VISITANTE */
         .podium-section { display: flex; gap: 12px; justify-content: center; align-items: flex-end; flex-wrap: wrap; width: 100%; }
         
         .champ-card { 
@@ -87,60 +83,24 @@
             border-radius: 12px; text-align: center; width: 100%; max-width: 220px;
             box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); border: 2px solid #fef08a; 
         }
-        .champ-title { font-size: 11px; font-weight: 900; letter-spacing: 1px; color: #451a03; }
-        .champ-name { font-size: 15px; font-weight: 800; color: #000; margin-top: 4px; word-break: break-all; }
+        .champ-title { font-size: 11px; font-weight: 900; color: #451a03; }
+        .champ-name { font-size: 15px; font-weight: 800; color: #000; margin-top: 4px; }
 
         .silver-card { 
             background: linear-gradient(135deg, #475569, #64748b); color: #fff; padding: 12px; 
             border-radius: 12px; text-align: center; width: 100%; max-width: 200px;
             box-shadow: 0 0 15px rgba(203, 213, 225, 0.25); border: 2px solid #cbd5e1; 
         }
-        .silver-title { font-size: 11px; font-weight: 900; letter-spacing: 1px; color: #f1f5f9; }
-        .silver-name { font-size: 14px; font-weight: 800; color: #ffffff; margin-top: 4px; word-break: break-all; }
+        .silver-title { font-size: 11px; font-weight: 900; color: #f1f5f9; }
+        .silver-name { font-size: 14px; font-weight: 800; color: #ffffff; margin-top: 4px; }
 
         .bronze-card { 
             background: linear-gradient(135deg, #78350f, #92400e); color: #fff; padding: 12px; 
             border-radius: 12px; text-align: center; width: 100%; max-width: 200px;
             box-shadow: 0 0 15px rgba(217, 119, 6, 0.2); border: 2px solid #f59e0b; 
         }
-        .bronze-title { font-size: 11px; font-weight: 900; letter-spacing: 1px; color: #fef3c7; }
-        .bronze-name { font-size: 14px; font-weight: 800; color: #fef3c7; margin-top: 4px; word-break: break-all; }
-
-        /* ESTILOS DO RODAPÉ */
-        footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #1e293b;
-            text-align: center;
-        }
-        .footer-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-        .footer-icon {
-            width: 32px;
-            height: auto;
-            border-radius: 4px;
-        }
-        .footer-text {
-            color: #64748b;
-            font-size: 13px;
-            margin: 0;
-            font-weight: 500;
-        }
-        .footer-text a {
-            color: #38bdf8;
-            text-decoration: none;
-            font-weight: 700;
-            transition: all 0.2s ease;
-        }
-        .footer-text a:hover {
-            color: #7dd3fc;
-            text-decoration: underline;
-            text-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
-        }
+        .bronze-title { font-size: 11px; font-weight: 900; color: #fef3c7; }
+        .bronze-name { font-size: 14px; font-weight: 800; color: #fef3c7; margin-top: 4px; }
     </style>
 </head>
 <body>
@@ -151,7 +111,6 @@
         <p>Acompanhamento dos Confrontos em Tempo Real</p>
     </header>
 
-    <!-- ABAS DE SELEÇÃO DO TORNEIO -->
     <div class="tournament-tabs">
         <button type="button" class="tab-btn active" id="tab1" onclick="switchTournament(1)">🥋 Robô Sumô</button>
         <button type="button" class="tab-btn" id="tab2" onclick="switchTournament(2)">🪢 Cabo de Guerra</button>
@@ -160,7 +119,6 @@
     <div class="pyramid-outer-container">
         <div class="pyramid-container">
             
-            <!-- TOPO: PÓDIO COMPLETO -->
             <div class="pyramid-level">
                 <div class="podium-section">
                     <div class="silver-card">
@@ -274,61 +232,61 @@
             <div class="pyramid-level">
                 <div class="level-title">1º - 1ª Rodada (Mata-Mata)</div>
                 <div class="level-matches">
-                    <div class="match" data-match="w_r1_m1">
+                    <div class="match" id="vis_card_r1_m1" data-match="w_r1_m1">
                         <span class="match-label">Conf 01</span>
                         <div class="team" id="r1_m1_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m1_t2">-</div>
                     </div>
-                    <div class="match" data-match="w_r1_m2">
+                    <div class="match" id="vis_card_r1_m2" data-match="w_r1_m2">
                         <span class="match-label">Conf 02</span>
                         <div class="team" id="r1_m2_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m2_t2">-</div>
                     </div>
-                    <div class="match" data-match="w_r1_m3">
+                    <div class="match" id="vis_card_r1_m3" data-match="w_r1_m3">
                         <span class="match-label">Conf 03</span>
                         <div class="team" id="r1_m3_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m3_t2">-</div>
                     </div>
-                    <div class="match" data-match="w_r1_m4">
+                    <div class="match" id="vis_card_r1_m4" data-match="w_r1_m4">
                         <span class="match-label">Conf 04</span>
                         <div class="team" id="r1_m4_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m4_t2">-</div>
                     </div>
-                    <div class="match" data-match="w_r1_m5">
+                    <div class="match" id="vis_card_r1_m5" data-match="w_r1_m5">
                         <span class="match-label">Conf 05</span>
                         <div class="team" id="r1_m5_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m5_t2">-</div>
                     </div>
-                    <div class="match" data-match="w_r1_m6">
+                    <div class="match" id="vis_card_r1_m6" data-match="w_r1_m6">
                         <span class="match-label">Conf 06</span>
                         <div class="team" id="r1_m6_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m6_t2">-</div>
                     </div>
-                    <div class="match" data-match="w_r1_m7">
+                    <div class="match" id="vis_card_r1_m7" data-match="w_r1_m7">
                         <span class="match-label">Conf 07</span>
                         <div class="team" id="r1_m7_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m7_t2">-</div>
                     </div>
-                    <div class="match" data-match="w_r1_m8">
+                    <div class="match" id="vis_card_r1_m8" data-match="w_r1_m8">
                         <span class="match-label">Conf 08</span>
                         <div class="team" id="r1_m8_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m8_t2">-</div>
                     </div>
-                    <div class="match" data-match="w_r1_m9">
+                    <div class="match" id="vis_card_r1_m9" data-match="w_r1_m9">
                         <span class="match-label">Conf 09</span>
                         <div class="team" id="r1_m9_t1">-</div>
                         <div class="vs-divider">VS</div>
                         <div class="team" id="r1_m9_t2">-</div>
                     </div>
-                    <div class="match yellow-box">
+                    <div class="match yellow-box" id="vis_card_r1_m10">
                         <span class="match-label">Chapéu 1ª Rodada</span>
                         <div class="team" id="r1_m10_t1">-</div>
                     </div>
@@ -338,29 +296,8 @@
         </div>
     </div>
 
-    <footer>
-        <div class="footer-content">
-            <img src="styles/icon.png" alt="Ícone PET Fronteira" class="footer-icon">
-            <p class="footer-text">
-                <strong>Solicitante:</strong> <a href="https://petfronteira.duckdns.org/" target="_blank" rel="noopener noreferrer">PET Fronteira</a>
-            </p>
-            <span style="color: #334155; font-size: 18px;">|</span>
-            <p class="footer-text">
-                <strong>Criador:</strong> 
-                <a href="https://github.com/CarlosCoengaUFMS" target="_blank" rel="noopener noreferrer">
-                    <img src="https://github.com/favicon.ico" alt="GitHub" style="width: 16px; height: 16px; vertical-align: middle; border-radius: 50%;">
-                    CarlosCoengaUFMS
-                </a>
-            </p>
-        </div>
-    </footer>
-
     <script>
-        const TOURNAMENT_NAMES = {
-            1: "Robô Sumô",
-            2: "Cabo de Guerra"
-        };
-
+        const TOURNAMENT_NAMES = { 1: "Robô Sumô", 2: "Cabo de Guerra" };
         let currentTournamentId = 1;
         let realtimeChannel = null;
 
@@ -377,9 +314,6 @@
             document.getElementById('tab2').classList.toggle('active', id === 2);
             document.getElementById('mainTitle').textContent = `Chaveamento Oficial - ${TOURNAMENT_NAMES[id]}`;
             
-            const newUrl = `${window.location.pathname}?t=${id}`;
-            window.history.replaceState({ path: newUrl }, '', newUrl);
-
             clearBoard();
             fetchVisitorData();
             subscribeRealtime();
@@ -388,6 +322,19 @@
         function renderBracket(bracketData) {
             clearBoard();
             if (!bracketData) return;
+
+            if (bracketData.active_schools_text) {
+                const count = bracketData.active_schools_text.split('\n').filter(s => s.trim()).length;
+                const matchesCount = Math.floor(count / 2);
+                const hasBye = count % 2 !== 0;
+
+                for (let i = 1; i <= 9; i++) {
+                    const card = document.getElementById(`vis_card_r1_m${i}`);
+                    if (card) card.style.display = (i <= matchesCount) ? 'block' : 'none';
+                }
+                const cardChapeu = document.getElementById('vis_card_r1_m10');
+                if (cardChapeu) cardChapeu.style.display = hasBye ? 'block' : 'none';
+            }
 
             Object.keys(bracketData).forEach(id => {
                 const element = document.getElementById(id);
@@ -428,9 +375,7 @@
         }
 
         function subscribeRealtime() {
-            if (realtimeChannel) {
-                supabase.removeChannel(realtimeChannel);
-            }
+            if (realtimeChannel) supabase.removeChannel(realtimeChannel);
 
             realtimeChannel = supabase
                 .channel(`public:tournament_data:${currentTournamentId}`)

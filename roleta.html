@@ -8,7 +8,6 @@
     <link rel="icon" href="./styles/logo.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Mantenha seus scripts externos de auth aqui -->
     <script src="js/auth.js" defer></script>
 
     <style>
@@ -22,17 +21,7 @@
         }
 
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        
-        body { 
-            background-color: var(--bg-color); margin: 0; padding: 15px; 
-            color: var(--text-main); min-height: 100vh; overflow-x: hidden;
-        }
-        
-        /* Personalização do Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        body { background-color: var(--bg-color); margin: 0; padding: 15px; color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
         header { 
             display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; 
@@ -75,9 +64,8 @@
             width: 100%; height: 180px; background: #0f172a; color: var(--text-main); 
             border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; 
             font-size: 13px; outline: none; resize: vertical; line-height: 1.5;
-            transition: border-color 0.2s;
         }
-        textarea:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+        textarea:focus { border-color: var(--accent-blue); }
 
         .presets { display: flex; gap: 8px; flex-wrap: wrap; }
         .btn-preset { 
@@ -91,7 +79,6 @@
             margin-top: 5px; color: #cbd5e1; user-select: none;
         }
 
-        /* ÁREA DA ROLETA */
         .wheel-section { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
         .wheel-wrapper { position: relative; width: 100%; max-width: 500px; aspect-ratio: 1; margin: 0 auto; }
 
@@ -116,13 +103,9 @@
             text-transform: uppercase; border-radius: 50px; cursor: pointer;
             box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .spin-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 0 30px rgba(234, 179, 8, 0.6); }
-        .spin-btn:active:not(:disabled) { transform: scale(0.98); }
-        .spin-btn:disabled { 
-            background: #334155; color: #94a3b8; box-shadow: none; cursor: not-allowed; opacity: 0.7;
-        }
+        .spin-btn:hover:not(:disabled) { transform: scale(1.05); }
+        .spin-btn:disabled { background: #334155; color: #94a3b8; box-shadow: none; cursor: not-allowed; }
 
-        /* ANÚNCIO DO VENCEDOR */
         .winner-modal {
             position: fixed; inset: 0; background: rgba(11, 17, 32, 0.9); backdrop-filter: blur(10px);
             display: flex; justify-content: center; align-items: center; z-index: 100;
@@ -131,14 +114,12 @@
         .winner-modal.active { opacity: 1; pointer-events: auto; }
 
         .winner-card {
-            background: var(--panel-bg); border: 2px solid var(--accent-gold); padding: 40px; border-radius: 24px;
+            background: var(--panel-bg); border: 2px solid var(--accent-gold); padding: 30px; border-radius: 24px;
             text-align: center; max-width: 90%; width: 450px; box-shadow: 0 0 60px rgba(234, 179, 8, 0.2);
-            transform: translateY(20px) scale(0.9); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .winner-modal.active .winner-card { transform: translateY(0) scale(1); }
 
         .winner-subtitle { font-size: 16px; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 3px; }
-        .winner-name { font-size: 32px; font-weight: 900; color: #ffffff; margin: 20px 0 30px; word-break: break-word; line-height: 1.2; }
+        .winner-name { font-size: 30px; font-weight: 900; color: #ffffff; margin: 15px 0 20px; word-break: break-word; }
 
         .history-list { 
             font-size: 13px; max-height: 150px; overflow-y: auto; background: #0f172a; 
@@ -148,15 +129,12 @@
             padding: 6px 8px; border-bottom: 1px solid var(--panel-bg); 
             display: flex; justify-content: space-between; align-items: center;
         }
-        .history-item:last-child { border-bottom: none; }
-        .history-time { color: #64748b; font-size: 11px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="header-brand">
-            <!-- Caso a imagem quebre, adicionei um emoji de fallback -->
             <img src="./styles/logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
             <h1>🎰 Sorteador Oficial</h1>
         </div>
@@ -167,12 +145,11 @@
     </header>
 
     <div class="main-container">
-        <!-- PAINEL DE CONTROLE / LISTA -->
         <div class="panel">
             <div class="panel-title">📋 Participantes</div>
             
             <div class="presets">
-                <button class="btn-preset" type="button" onclick="load19Schools()">19 Escolas (R1)</button>
+                <button class="btn-preset" type="button" onclick="load19Schools()">19 Escolas</button>
                 <button class="btn-preset" type="button" onclick="clearList()">Limpar Lista</button>
             </div>
 
@@ -196,7 +173,6 @@
             </div>
         </div>
 
-        <!-- ÁREA DA ROLETA -->
         <div class="panel wheel-section">
             <div class="wheel-wrapper">
                 <div class="pointer"></div>
@@ -209,17 +185,21 @@
         </div>
     </div>
 
-    <!-- MODAL DO VENCEDOR -->
+    <!-- MODAL DO VENCEDOR COM AÇÃO DE ALOCAÇÃO -->
     <div class="winner-modal" id="winnerModal">
         <div class="winner-card">
             <div class="winner-subtitle">🎉 SORTEADO! 🎉</div>
             <div class="winner-name" id="winnerName">Escola XX</div>
-            <button class="btn btn-warning" style="width: 100%; padding: 14px; font-size: 16px; font-weight: bold;" onclick="closeModal()">Continuar</button>
+            
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                <button class="btn btn-success" style="padding:12px; font-weight:bold;" onclick="sendToNextSlot(1)">📌 Alocar no Robô Sumô</button>
+                <button class="btn btn-purple" style="padding:12px; font-weight:bold;" onclick="sendToNextSlot(2)">🪢 Alocar no Cabo de Guerra</button>
+                <button class="btn btn-warning" style="padding:10px;" onclick="closeModal()">Apenas Fechar</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURAÇÕES GERAIS
         const BASE_SIZE = 500;
         const canvas = document.getElementById('wheelCanvas');
         const ctx = canvas.getContext('2d');
@@ -237,19 +217,15 @@
         let isSpinning = false;
         let lastSegmentIndex = -1;
         
-        // Variáveis de Animação
         let spinAngleStart = 10;
         let spinTime = 0;
         let spinTimeTotal = 0;
 
-        // CORES ESTILIZADAS (Paleta expandida e vibrante)
         const sliceColors = [
             '#2563eb', '#d97706', '#16a34a', '#dc2626', '#9333ea', 
-            '#0284c7', '#ca8a04', '#059669', '#e11d48', '#7c3aed',
-            '#ea580c', '#4f46e5'
+            '#0284c7', '#ca8a04', '#059669', '#e11d48', '#7c3aed'
         ];
 
-        // OTIMIZAÇÃO: Suporte para telas Retina (High-DPI)
         function initCanvasScale() {
             const scale = window.devicePixelRatio || 1;
             canvas.width = BASE_SIZE * scale;
@@ -257,15 +233,10 @@
             ctx.scale(scale, scale);
         }
 
-        // SISTEMA DE ÁUDIO MELHORADO
         let audioCtx;
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
         function playTickSound() {
@@ -285,10 +256,8 @@
             } catch (e) {}
         }
 
-        // FUNÇÕES DE MANIPULAÇÃO DA LISTA
         function load19Schools() {
-            let defaultList = Array.from({length: 19}, (_, i) => `Escola ${(i+1).toString().padStart(2, '0')}`);
-            teamsInput.value = defaultList.join('\n');
+            teamsInput.value = Array.from({length: 19}, (_, i) => `Escola ${(i+1).toString().padStart(2, '0')}`).join('\n');
             updateWheel();
         }
 
@@ -303,174 +272,97 @@
             debounceTimer = setTimeout(() => { updateWheel(); }, 500);
         }
 
-        // LÓGICA DA ROLETA
         function updateWheel() {
-            const raw = teamsInput.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
-            teams = raw;
-            
-            // Requer pelo menos 2 itens para fazer sentido girar
+            teams = teamsInput.value.split('\n').map(s => s.trim()).filter(s => s.length > 0);
             if (teams.length > 1) {
                 arc = (Math.PI * 2) / teams.length;
                 drawWheel();
                 spinBtn.disabled = false;
                 spinBtn.textContent = "GIRAR ROLETA";
-            } else if (teams.length === 1) {
-                arc = Math.PI * 2;
-                drawWheel();
-                spinBtn.disabled = true;
-                spinBtn.textContent = "ADICIONE MAIS ITENS";
             } else {
                 ctx.clearRect(0, 0, BASE_SIZE, BASE_SIZE);
                 spinBtn.disabled = true;
-                spinBtn.textContent = "LISTA VAZIA";
+                spinBtn.textContent = teams.length === 1 ? "ADICIONE MAIS ITENS" : "LISTA VAZIA";
             }
         }
 
         function drawWheel() {
             if (teams.length === 0) return;
-            
             const center = BASE_SIZE / 2;
-            const outsideRadius = 230;
-            const textRadius = 155;
-            const insideRadius = 40;
-
             ctx.clearRect(0, 0, BASE_SIZE, BASE_SIZE);
-
-            ctx.strokeStyle = "#1e293b";
-            ctx.lineWidth = 3;
 
             for (let i = 0; i < teams.length; i++) {
                 const angle = startAngle + i * arc;
-                
-                // Evita que a última fatia tenha a mesma cor da primeira se for ímpar
-                let colorIndex = i % sliceColors.length;
-                if (i === teams.length - 1 && colorIndex === 0 && teams.length % sliceColors.length !== 0) {
-                    colorIndex = 1; 
-                }
-                ctx.fillStyle = sliceColors[colorIndex];
+                ctx.fillStyle = sliceColors[i % sliceColors.length];
 
-                // Desenhar fatia
                 ctx.beginPath();
-                ctx.arc(center, center, outsideRadius, angle, angle + arc, false);
-                ctx.arc(center, center, insideRadius, angle + arc, angle, true);
+                ctx.arc(center, center, 230, angle, angle + arc, false);
+                ctx.arc(center, center, 40, angle + arc, angle, true);
                 ctx.fill();
-                ctx.stroke();
 
-                // Desenhar Texto
                 ctx.save();
-                ctx.translate(
-                    center + Math.cos(angle + arc / 2) * textRadius, 
-                    center + Math.sin(angle + arc / 2) * textRadius
-                );
+                ctx.translate(center + Math.cos(angle + arc / 2) * 155, center + Math.sin(angle + arc / 2) * 155);
                 ctx.rotate(angle + arc / 2 + Math.PI / 2);
-                
-                const text = teams[i];
-                const displayText = text.length > 18 ? text.substring(0, 16) + '...' : text;
-                
-                // Sombra do texto para melhorar legibilidade
-                ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
-                ctx.shadowOffsetX = 1;
-                ctx.shadowOffsetY = 1;
-                ctx.shadowBlur = 3;
-                
                 ctx.fillStyle = "#ffffff";
                 ctx.font = 'bold 15px "Segoe UI", sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText(displayText, 0, 5); 
+                ctx.fillText(teams[i].length > 18 ? teams[i].substring(0, 16) + '...' : teams[i], 0, 5); 
                 ctx.restore();
             }
-
-            // CENTRO DA ROLETA
-            ctx.beginPath();
-            ctx.arc(center, center, insideRadius, 0, Math.PI * 2, false);
-            ctx.fillStyle = "#0f172a";
-            ctx.fill();
-            ctx.strokeStyle = "#38bdf8";
-            ctx.lineWidth = 4;
-            ctx.stroke();
-            
-            // Ponto central brilhante
-            ctx.beginPath();
-            ctx.arc(center, center, insideRadius / 3, 0, Math.PI * 2, false);
-            ctx.fillStyle = "#38bdf8";
-            ctx.fill();
         }
 
         function spinWheel() {
             if (isSpinning || teams.length < 2) return;
-            
-            initAudio(); // Inicia contexto de áudio
+            initAudio();
             isSpinning = true;
             spinBtn.disabled = true;
-
-            // Parâmetros de rotação aleatórios
             spinAngleStart = Math.random() * 10 + 20;
             spinTime = 0;
-            spinTimeTotal = Math.random() * 3000 + 4500; // Entre 4.5s e 7.5s de giro
-            
+            spinTimeTotal = Math.random() * 3000 + 4500;
             rotateWheel();
         }
 
         function rotateWheel() {
-            spinTime += 20; // 50fps
+            spinTime += 20;
             if (spinTime >= spinTimeTotal) {
                 stopRotateWheel();
                 return;
             }
-            
-            // Função de Easing (suavidade)
             const spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
             startAngle += (spinAngle * Math.PI / 180);
             drawWheel();
 
-            // Lógica do som de "TIC" baseada na posição do ponteiro (topo)
-            const degrees = (startAngle * 180 / Math.PI) + 90; // +90 porque o ponteiro está em cima
-            const ardeg = arc * 180 / Math.PI;
-            const currentSegment = Math.floor((360 - (degrees % 360)) / ardeg);
-            
+            const degrees = (startAngle * 180 / Math.PI) + 90;
+            const currentSegment = Math.floor((360 - (degrees % 360)) / (arc * 180 / Math.PI));
             if (currentSegment !== lastSegmentIndex) {
                 playTickSound();
                 lastSegmentIndex = currentSegment;
             }
-
             spinTimeout = requestAnimationFrame(rotateWheel);
         }
 
         function stopRotateWheel() {
             cancelAnimationFrame(spinTimeout);
-            
             const degrees = (startAngle * 180 / Math.PI) + 90;
-            const ardeg = arc * 180 / Math.PI;
-            const index = Math.floor((360 - (degrees % 360)) / ardeg) % teams.length;
+            const index = Math.floor((360 - (degrees % 360)) / (arc * 180 / Math.PI)) % teams.length;
             const winningTeam = teams[index];
 
-            // Efeito de Confete
-            confetti({
-                particleCount: 150,
-                spread: 90,
-                origin: { y: 0.6 },
-                colors: ['#2563eb', '#eab308', '#16a34a', '#ef4444', '#ffffff']
-            });
-
+            confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
             winnerNameText.textContent = winningTeam;
             winnerModal.classList.add('active');
 
             addHistory(winningTeam);
 
-            // Remover item sorteado
             if (document.getElementById('autoRemove').checked) {
                 teams.splice(index, 1);
                 teamsInput.value = teams.join('\n');
             }
-
             isSpinning = false;
         }
 
-        // Função matemática para suavizar o final do giro
         function easeOut(t, b, c, d) {
             const ts = (t /= d) * t;
-            const tc = ts * t;
-            return b + c * (tc + -3 * ts + 3 * t);
+            return b + c * (ts * t + -3 * ts + 3 * t);
         }
 
         function closeModal() {
@@ -478,13 +370,52 @@
             updateWheel();
         }
 
+        async function sendToNextSlot(tournamentId) {
+            const winnerName = winnerNameText.textContent;
+
+            const { data } = await supabase
+                .from('tournament_data')
+                .select('data')
+                .eq('id', tournamentId)
+                .maybeSingle();
+
+            let currentData = data?.data || {};
+            let allocated = false;
+
+            for (let i = 1; i <= 9; i++) {
+                if (!currentData[`r1_m${i}_t1`]) {
+                    currentData[`r1_m${i}_t1`] = winnerName;
+                    allocated = true; break;
+                } else if (!currentData[`r1_m${i}_t2`]) {
+                    currentData[`r1_m${i}_t2`] = winnerName;
+                    allocated = true; break;
+                }
+            }
+
+            if (!allocated && !currentData['r1_m10_t1']) {
+                currentData['r1_m10_t1'] = winnerName;
+                allocated = true;
+            }
+
+            if (allocated) {
+                await supabase.from('tournament_data').upsert({
+                    id: tournamentId,
+                    data: currentData,
+                    updated_at: new Date()
+                });
+                alert(`✅ ${winnerName} enviado para o chaveamento!`);
+                closeModal();
+            } else {
+                alert('⚠️ Os confrontos da 1ª Rodada desta modalidade já estão cheios!');
+            }
+        }
+
         function addHistory(name) {
             if (emptyHistoryText) emptyHistoryText.style.display = 'none';
-            
-            const time = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const time = new Date().toLocaleTimeString('pt-BR');
             const item = document.createElement('div');
             item.className = 'history-item';
-            item.innerHTML = `<strong>${name}</strong> <span class="history-time">${time}</span>`;
+            item.innerHTML = `<strong>${name}</strong> <span style="color:#64748b;font-size:11px;">${time}</span>`;
             historyList.prepend(item);
         }
 
@@ -492,17 +423,15 @@
             historyList.innerHTML = '<span id="emptyHistory" style="color: #64748b; display: block; text-align: center; margin-top: 10px;">Nenhum sorteio realizado.</span>';
         }
 
-        // Inicialização
         window.onload = () => {
             initCanvasScale();
             load19Schools();
         };
 
-        // Responsividade caso a tela mude de tamanho
         window.onresize = () => {
             initCanvasScale();
             drawWheel();
-        }
+        };
     </script>
 </body>
 </html>
